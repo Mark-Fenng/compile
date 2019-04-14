@@ -1,11 +1,12 @@
 public class token {
     private String type;
     private String originWord;
-    private int typeValue;
+    private int tableIndex;
 
-    token(String type, String word) {
+    token(String type, String word, int index) {
         this.type = type;
         this.originWord = word;
+        this.tableIndex = index;
     }
 
     /**
@@ -23,10 +24,10 @@ public class token {
     }
 
     /**
-     * @return the typeValue
+     * @return the tableIndex
      */
-    public int getTypeValue() {
-        return typeValue;
+    public int getTableIndex() {
+        return tableIndex;
     }
 
     /**
@@ -41,13 +42,6 @@ public class token {
      */
     public void setOriginWord(String originWord) {
         this.originWord = originWord;
-    }
-
-    /**
-     * @param typeValue the typeValue to set
-     */
-    public void setTypeValue(int typeValue) {
-        this.typeValue = typeValue;
     }
 }
 // reserved, operator, punctuation, variable, number, comment

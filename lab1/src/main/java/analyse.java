@@ -6,6 +6,7 @@ public class analyse {
     private final wordTable reserved = new wordTable();
     private final wordTable variable = new wordTable();
     private final wordTable punctuation = new wordTable();
+    private final wordTable operators = new wordTable();
     private final List<token> tokenList = new ArrayList<>();
     private final String content;
     private int index = 0;
@@ -14,6 +15,8 @@ public class analyse {
 
         reserved.setWordList(Arrays.asList("return", "void", "int", "float", "bool", "if", "else", "while"));
         punctuation.setWordList(Arrays.asList("=", ";", "(", ")", ",", "{", "}"));
+        operators.setWordList(
+                Arrays.asList("+", "*", "/", "!=", " !", "&&", "&", "||", "|", "==", ">=", ">", "<=", "<"));
 
         this.content = content;
 
@@ -22,32 +25,32 @@ public class analyse {
     void parse() {
         try {
             while (index < content.length()) {
-                System.out.print(getChar(index));
                 if (Character.isDigit(getChar(index)) || getChar(index) == '-') {
                     String digit = getDigit();
-                    tokenList.add(new token("number", digit));
+                    tokenList.add(new token("number", digit, 0));
                 } else if (Character.isLetter(getChar(index)) || getChar(index) == '_') {
                     String word = getWord();
                     if (reserved.getWordList().contains(word)) {
-                        tokenList.add(new token("reserved", word));
+                        tokenList.add(new token("reserved", word, reserved.getWordList().indexOf(word)));
                     } else {
-                        tokenList.add(new token("variable", word));
-                        variable.addWord(word);
+                        int tableIndex = variable.addWord(word);
+                        tokenList.add(new token("variable", word, tableIndex));
                     }
                 } else if (getChar(index) == '/' && index + 1 < content.length() && getChar(index + 1) == '*') {
                     String comment = getComment();
-                    tokenList.add(new token("comment", comment));
+                    tokenList.add(new token("comment", comment, 0));
                 } else {
                     if (punctuation.getWordList().contains("" + getChar(index))) {
                         if (!(getChar(index) == '=' && index + 1 < content.length() && getChar(index + 1) == '=')) {
-                            tokenList.add(new token("punctuation", "" + getChar(index)));
+                            tokenList.add(new token("punctuation", "" + getChar(index),
+                                    punctuation.getWordList().indexOf("" + getChar(index))));
                             index += 1;
                             continue;
                         }
                     }
                     String operator = getOperator();
                     if (!operator.equals("")) {
-                        tokenList.add(new token("operator", operator));
+                        tokenList.add(new token("operator", operator, operators.getWordList().indexOf(operator)));
                     }
                 }
             }

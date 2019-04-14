@@ -1,11 +1,10 @@
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        String filePath = "./lab1/input.c";
+        String filePath = "./input.c";
         BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
         String line;
         String content = "";
@@ -14,10 +13,11 @@ public class Main {
         analyse analyse = new analyse(content);
         analyse.parse();
         System.out.println("Token table:");
-        System.out.println("Token type  value");
+        System.out.println("Token type      value       table index");
         for (token t : analyse.getTokenList()) {
             System.out.print("< " + t.getType() + " ,");
-            System.out.print(" " + t.getOriginWord() + " >");
+            System.out.print(" " + t.getOriginWord() + " ,");
+            System.out.print(" " + t.getTableIndex() + " >");
             System.out.println();
         }
         System.out.println();

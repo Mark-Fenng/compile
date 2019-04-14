@@ -1,10 +1,9 @@
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class wordTable {
     private String type;
-    private Set<String> wordList = new HashSet<>();
+    private List<String> wordList = new ArrayList();
 
     /**
      * @return the type
@@ -27,14 +26,18 @@ public class wordTable {
         this.wordList.addAll(wordList);
     }
 
-    public void addWord(String word) {
-        this.wordList.add(word);
+    public int addWord(String word) {
+        if (!wordList.contains(word)) {
+            this.wordList.add(word);
+        }
+        return wordList.indexOf(word);
+
     }
 
     /**
      * @return the wordList
      */
-    public Set<String> getWordList() {
+    public List<String> getWordList() {
         return wordList;
     }
 }
