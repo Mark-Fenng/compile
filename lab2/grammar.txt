@@ -1,0 +1,14 @@
+terminator
++,*,(,),i,$,ε
+
+non-terminator
+S,E,T,F
+
+grammar
+S->E
+E->E + T
+E->T
+T->T * F
+T->F
+F->( E )
+F->i

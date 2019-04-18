@@ -1,5 +1,55 @@
-public class Main{
-    public static void main(String[] args){
-        System.out.println("test");
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        String grammarInputFile = "grammar.txt";
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(grammarInputFile));
+        String line;
+        List<String> terminators = new ArrayList<>();
+        List<String> non_terminators = new ArrayList<>();
+        List<Formula> grammars = new ArrayList<>();
+        boolean terminator = false, non_terminator = false, grammar = false;
+        while ((line = bufferedReader.readLine()) != null) {
+            if (!line.equals("")) {
+                if (!line.equals("")) {
+                    switch (line.toLowerCase()) {
+                    case "terminator":
+                        terminator = true;
+                        non_terminator = false;
+                        grammar = false;
+                        break;
+                    case "non-terminator":
+                        terminator = false;
+                        non_terminator = true;
+                        grammar = false;
+                        break;
+                    case "grammar":
+                        terminator = false;
+                        non_terminator = false;
+                        grammar = true;
+                        break;
+                    default:
+                        break;
+                    }
+                }
+                if (!line.toLowerCase().equals("terminator") && terminator) {
+                    for (String str : line.split(",")) {
+                        terminators.add(str);
+                    }
+                }
+                if (!line.toLowerCase().equals("non-terminator") && non_terminator) {
+                    for (String str : line.split(",")) {
+                        non_terminators.add(str);
+                    }
+                }
+                if (!line.toLowerCase().equals("grammar") && grammar) {
+                    grammars.add(new Formula(line));
+                }
+            }
+        }
+        bufferedReader.close();
     }
 }
