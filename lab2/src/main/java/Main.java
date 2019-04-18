@@ -12,7 +12,7 @@ public class Main {
     public static Set<String> terminators = new HashSet<>(), non_terminators = new HashSet<>();
     public static List<Formula> grammars = new ArrayList<>();
     public static Map<String, Set<String>> firstSets = new HashMap<>();
-    public static String nullString = "ε";
+    public static String nullString = "ε"; // define the null symbol as variable nullString
 
     public static void main(String[] args) throws Exception {
         String grammarInputFile = "grammarTest.txt";
@@ -23,9 +23,17 @@ public class Main {
         System.out.println(firstSets.toString());
     }
 
+    /**
+     * get prefix's first set
+     * 
+     * @param prefix one non-terminator whose first set is needed to be computed
+     * @return prefix's first set
+     */
     public static Set<String> getFirstSet(String prefix) {
         Set<String> firstSet = new HashSet<>();
         for (Formula formula : grammars) {
+
+            // iterate all grammar formulas to find formulas like this: prefix->...
             if (formula.getPrefix().equals(prefix)) {
                 List<String> symbols = formula.getSymbols();
                 int i = 1;
@@ -33,18 +41,26 @@ public class Main {
                     firstSet.add(nullString);
                 while (i <= symbols.size()) {
                     String tempString = symbols.get(i - 1);
+
+                    // current symbol is a terminator
                     if (terminators.contains(tempString)) {
                         firstSet.add(tempString);
                         break;
                     }
+
+                    // current symbol is a non-terminator
                     if (non_terminators.contains(tempString)) {
                         if (!prefix.equals(tempString)) {
                             Set<String> tempSet;
+
+                            // the first set of current symbol has been computed before
                             if (firstSets.containsKey(tempString)) {
                                 tempSet = firstSets.get(tempString);
                             } else {
                                 tempSet = getFirstSet(tempString);
                             }
+
+                            // add all symbol in current symbol's first set except null string
                             for (String str : tempSet) {
                                 if (!str.equals(nullString)) {
                                     firstSet.add(str);
@@ -65,6 +81,19 @@ public class Main {
         return firstSet;
     }
 
+    /**
+     * read terminator set, non-terminator set and grammar formulas from file
+     * 
+     * file format example:
+     * terminator
+     * a,+,b
+     * non-terminator
+     * C
+     * grammar
+     * C->a + b
+     * @param filePath file path
+     * @throws IOException read exception
+     */
     public static void readGrammar(String filePath) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
         String line;
