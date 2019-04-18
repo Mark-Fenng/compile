@@ -1,0 +1,15 @@
+terminator
+PLUS,E,MUL,ε,LP,RP,ID
+
+non-terminator
+e,t,t',e',f
+
+grammar
+e->t e'
+e'->PLUS t e'
+e'->ε
+t->f t'
+t'->MUL f t'
+t'->ε
+f->LP e RP
+f->ID
