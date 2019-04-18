@@ -1,16 +1,21 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws Exception {
         String grammarInputFile = "grammar.txt";
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(grammarInputFile));
-        String line;
-        List<String> terminators = new ArrayList<>();
-        List<String> non_terminators = new ArrayList<>();
+        List<String> terminators = new ArrayList<>(), non_terminators = new ArrayList<>();
         List<Formula> grammars = new ArrayList<>();
+        readGrammar(terminators, non_terminators, grammars, grammarInputFile);
+    }
+
+    public static void readGrammar(List<String> terminators, List<String> non_terminators, List<Formula> grammars,
+            String filePath) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
+        String line;
         boolean terminator = false, non_terminator = false, grammar = false;
         while ((line = bufferedReader.readLine()) != null) {
             if (!line.equals("")) {
