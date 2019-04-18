@@ -1,3 +1,9 @@
+null
+E
+
+end
+#
+
 terminator
 PLUS,E,MUL,ε,LP,RP,ID
 
@@ -7,9 +13,9 @@ e,t,t',e',f
 grammar
 e->t e'
 e'->PLUS t e'
-e'->ε
+e'->E
 t->f t'
 t'->MUL f t'
-t'->ε
+t'->E
 f->LP e RP
 f->ID

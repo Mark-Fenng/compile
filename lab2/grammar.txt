@@ -1,5 +1,11 @@
+null
+ε
+
+end
+#
+
 terminator
-+,*,(,),i,$,ε
++,*,(,),i,#,ε
 
 non-terminator
 S,E,T,F

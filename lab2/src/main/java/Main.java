@@ -13,6 +13,7 @@ public class Main {
     public static List<Formula> grammars = new ArrayList<>();
     public static Map<String, Set<String>> firstSets = new HashMap<>();
     public static String nullString = "ε"; // define the null symbol as variable nullString
+    public static String endString = "#"; // define the end symbol as variable endString
 
     public static void main(String[] args) throws Exception {
         String grammarInputFile = "grammarTest.txt";
@@ -84,20 +85,35 @@ public class Main {
     /**
      * read terminator set, non-terminator set and grammar formulas from file
      * 
-     * file format example:
+     * file format example
+     * 
+     * null
+     * 
+     * E
+     * 
+     * end
+     * 
+     * #
+     * 
      * terminator
+     * 
      * a,+,b
+     * 
      * non-terminator
+     * 
      * C
+     * 
      * grammar
+     * 
      * C->a + b
+     * 
      * @param filePath file path
      * @throws IOException read exception
      */
     public static void readGrammar(String filePath) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
         String line;
-        boolean terminator = false, non_terminator = false, grammar = false;
+        boolean terminator = false, non_terminator = false, grammar = false, readNull = false, readEnd = false;
         while ((line = bufferedReader.readLine()) != null) {
             if (!line.equals("")) {
                 if (!line.equals("")) {
@@ -106,17 +122,38 @@ public class Main {
                         terminator = true;
                         non_terminator = false;
                         grammar = false;
+                        readNull = false;
+                        readEnd = false;
                         break;
                     case "non-terminator":
                         terminator = false;
                         non_terminator = true;
                         grammar = false;
+                        readNull = false;
+                        readEnd = false;
                         break;
                     case "grammar":
                         terminator = false;
                         non_terminator = false;
                         grammar = true;
+                        readNull = false;
+                        readEnd = false;
                         break;
+                    case "null":
+                        terminator = false;
+                        non_terminator = false;
+                        grammar = false;
+                        readNull = true;
+                        readEnd = false;
+                        break;
+                    case "end":
+                        terminator = false;
+                        non_terminator = false;
+                        grammar = false;
+                        readNull = false;
+                        readEnd = true;
+                        break;
+
                     default:
                         break;
                     }
@@ -133,6 +170,12 @@ public class Main {
                 }
                 if (!line.toLowerCase().equals("grammar") && grammar) {
                     grammars.add(new Formula(line));
+                }
+                if (!line.toLowerCase().equals("null") && readNull) {
+                    nullString = line;
+                }
+                if (!line.toLowerCase().equals("end") && readEnd) {
+                    endString = line;
                 }
             }
         }
