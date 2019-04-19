@@ -23,7 +23,7 @@ public class LR1 {
         }
 
         Item rootItem = new Item(grammars.get(0));
-        rootItem.addSearchSymbol(Collections.singleton("#"));
+        rootItem.addSearchSymbol(Collections.singleton(endString));
         items.add(new ItemSet(Collections.singletonList(rootItem)));
         items.get(0).computeClosure();
         gotoTable.add(new HashMap<>());
@@ -57,21 +57,18 @@ public class LR1 {
                 List<Item> itemTempList = new ArrayList<>();
                 for (Item item : itemSet) {
                     if (!item.shouldReduce() && item.getSymbol().equals(sym)) {
-                        if (!item.shouldReduce()) {
-                            Item newItem = new Item(item.getFormula(), item.getState() + 1);
-                            newItem.addSearchSymbol(item.getSearchSymbol());
-                            itemTempList.add(newItem);
-                        } else {
-                            for (String str : item.getSearchSymbol()) {
-                                int tempInt = grammars.indexOf(new Formula(item.getFormula()));
-                                int index = items.indexOf(itemClosure);
-                                if (!actionTable.get(index).containsKey(sym))
-                                    actionTable.get(index).put(str, "r" + tempInt);
-                                else
-                                    throw new Exception("Conflict detected!");
-                            }
+                        Item newItem = new Item(item.getFormula(), item.getState() + 1);
+                        newItem.addSearchSymbol(item.getSearchSymbol());
+                        itemTempList.add(newItem);
+                    } else if (item.shouldReduce()) {
+                        for (String str : item.getSearchSymbol()) {
+                            int tempInt = grammars.indexOf(new Formula(item.getFormula()));
+                            int index = items.indexOf(itemClosure);
+                            if (!actionTable.get(index).containsKey(sym))
+                                actionTable.get(index).put(str, "r" + tempInt);
                         }
                     }
+
                 }
                 if (itemTempList.size() != 0) {
                     ItemSet itemTempSet = new ItemSet(itemTempList);
