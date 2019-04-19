@@ -54,7 +54,7 @@ public class Item extends Formula {
 
     @Override
     public boolean equals(Object obj) {
-        return (obj instanceof Item) && ((Item) obj).getFormula().equals(this.toString())
+        return (obj instanceof Item) && ((Item) obj).getFormula().equals(this.getFormula())
                 && ((Item) obj).getState() == this.state;
     }
 
