@@ -39,4 +39,9 @@ public class Formula {
         suffix = suffix.substring(0, suffix.length() - 1);
         return prefix + "->" + suffix;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Formula) && ((Formula) obj).toString().equals(this.toString());
+    }
 }

@@ -8,8 +8,8 @@ public class Main {
     public static List<Formula> grammars = new ArrayList<>();
     public static Map<String, Set<String>> firstSets = new HashMap<>(); // first set of all symbols
     public static List<ItemSet> items = new ArrayList<>(); // store all item set
-    public static List<Integer> gotoTable = new ArrayList<>(); // store goto table for LR(1)
-    public static List<String> actionTable = new ArrayList<>(); // store action table for LR(1)
+    public static List<HashMap<String, Integer>> gotoTable = new ArrayList<>(); // store goto table for LR(1)
+    public static List<HashMap<String, String>> actionTable = new ArrayList<>(); // store action table for LR(1)
     public static String nullString = "ε"; // define the null symbol as variable nullString
     public static String endString = "#"; // define the end symbol as variable endString
 
@@ -25,11 +25,52 @@ public class Main {
 
         Item rootItem = new Item(grammars.get(0));
         rootItem.addSearchSymbol(Collections.singleton("#"));
-        for (Item item : getClosure(rootItem)) {
-            System.out.println(item.toString());
-            System.out.println(item.getState());
-            System.out.println(item.getSearchSymbol().toString());
-            System.out.println();
+        items.add(new ItemSet(getClosure(rootItem)));
+        gotoTable.add(new HashMap<>());
+        actionTable.add(new HashMap<>());
+
+        getItemSets();
+        System.out.println(gotoTable);
+    }
+
+    public static void getItemSets() throws Exception {
+        Queue<ItemSet> queue = new LinkedList<>();
+        queue.add(items.get(0));
+        List<Item> itemSet;
+        while (queue.size() != 0) {
+            ItemSet itemClosure = queue.poll();
+            itemSet = itemClosure.getItems();
+            for (Item item : itemSet) {
+                if (!item.getSymbols().get(0).equals(nullString) && !item.shouldReduce()) {
+                    Item newItem = new Item(item.toString(), item.getState() + 1);
+                    newItem.addSearchSymbol(item.getSearchSymbol());
+                    ItemSet tempSet = new ItemSet(Collections.singletonList(newItem));
+                    String symbol = item.getSymbols().get(item.getState());
+                    int oldIndex = items.indexOf(itemClosure);
+                    int newIndex = oldIndex;
+                    if (!items.contains(tempSet)) {
+                        tempSet = new ItemSet(getClosure(newItem));
+                        items.add(tempSet);
+                        gotoTable.add(new HashMap<>());
+                        actionTable.add(new HashMap<>());
+                        queue.offer(tempSet);
+                        newIndex = items.indexOf(tempSet);
+                    }
+                    if (terminators.contains(symbol)) {
+                        actionTable.get(oldIndex).put(symbol, "s" + newIndex);
+                    } else if (non_terminators.contains(symbol)) {
+                        gotoTable.get(oldIndex).put(symbol, newIndex);
+                    } else {
+                        throw new Exception("Unsupported symbol:" + symbol);
+                    }
+                    if (newItem.shouldReduce()) {
+                        for (String str : newItem.getSymbols()) {
+                            int tempInt = grammars.indexOf(newItem.getFormula());
+                            actionTable.get(newIndex).put(str, "r" + tempInt);
+                        }
+                    }
+                }
+            }
         }
     }
 

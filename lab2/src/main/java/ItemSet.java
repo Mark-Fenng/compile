@@ -19,4 +19,9 @@ public class ItemSet {
     public boolean equals(Object obj) {
         return (obj instanceof ItemSet) && ((ItemSet) obj).getItems().get(0).equals(this.items.get(0));
     }
+
+    @Override
+    public String toString() {
+        return items.toString();
+    }
 }

@@ -48,9 +48,18 @@ public class Item extends Formula {
         return state == getSymbols().size();
     }
 
+    public Formula getFormula() {
+        return (Formula) this;
+    }
+
     @Override
     public boolean equals(Object obj) {
         return (obj instanceof Item) && ((Item) obj).toString().equals(this.toString())
                 && ((Item) obj).getState() == this.state;
+    }
+
+    @Override
+    public String toString() {
+        return "formula: " + super.toString() + "\nstate: " + this.state + "\n" + searchSymbol.toString();
     }
 }
