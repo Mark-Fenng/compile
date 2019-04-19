@@ -25,7 +25,7 @@ public class LR1 {
         Item rootItem = new Item(grammars.get(0));
         rootItem.addSearchSymbol(Collections.singleton("#"));
         items.add(new ItemSet(Collections.singletonList(rootItem)));
-
+        items.get(0).computeClosure();
         gotoTable.add(new HashMap<>());
         actionTable.add(new HashMap<>());
 
@@ -45,8 +45,48 @@ public class LR1 {
         while (queue.size() != 0) {
             ItemSet itemClosure = queue.poll();
             itemSet = itemClosure.getClosure();
-            for (String terminal : terminators) {
-
+            List<String> symbols = new ArrayList<>();
+            symbols.addAll(terminators);
+            symbols.addAll(non_terminators);
+            for (String sym : symbols) {
+                List<Item> itemTempList = new ArrayList<>();
+                for (Item item : itemSet) {
+                    if (!item.shouldReduce() && item.getSymbol().equals(sym)) {
+                        if (!item.shouldReduce()) {
+                            Item newItem = new Item(item.getFormula(), item.getState() + 1);
+                            newItem.addSearchSymbol(item.getSearchSymbol());
+                            itemTempList.add(newItem);
+                        }
+                    }
+                }
+                if (itemTempList.size() != 0) {
+                    ItemSet itemTempSet = new ItemSet(itemTempList);
+                    int oldIndex = items.indexOf(itemClosure);
+                    int newIndex = oldIndex;
+                    if (!items.contains(itemTempSet)) {
+                        itemTempSet.computeClosure();
+                        items.add(itemTempSet);
+                        gotoTable.add(new HashMap<>());
+                        actionTable.add(new HashMap<>());
+                        queue.offer(itemTempSet);
+                        newIndex = items.indexOf(itemTempSet);
+                    }
+                    if (terminators.contains(sym)) {
+                        actionTable.get(oldIndex).put(sym, "s" + newIndex);
+                    } else if (non_terminators.contains(sym)) {
+                        gotoTable.get(oldIndex).put(sym, newIndex);
+                    } else {
+                        throw new Exception("Unsupported symbol:" + sym);
+                    }
+                    for (Item newItem : itemTempSet.getInitItems()) {
+                        if (newItem.shouldReduce()) {
+                            for (String str : newItem.getSearchSymbol()) {
+                                int tempInt = grammars.indexOf(new Formula(newItem.getFormula()));
+                                actionTable.get(newIndex).put(str, "r" + tempInt);
+                            }
+                        }
+                    }
+                }
             }
 
             // for (Item item : itemSet) {

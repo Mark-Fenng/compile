@@ -27,6 +27,10 @@ public class Item extends Formula {
         return state;
     }
 
+    public String getSymbol() {
+        return this.getSymbols().get(state);
+    }
+
     /**
      * add search symbol if all existed, nothing will change
      * 
@@ -60,6 +64,6 @@ public class Item extends Formula {
 
     @Override
     public String toString() {
-        return "formula: " + super.toString() + "\nstate: " + this.state + "\n" + searchSymbol.toString() + "\n";
+        return "\nformula: " + super.toString() + "\nstate: " + this.state + "\n" + searchSymbol.toString() + "\n";
     }
 }

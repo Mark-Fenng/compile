@@ -9,6 +9,9 @@ public class ItemSet {
 
     ItemSet(List<Item> initItems) {
         this.initItems = initItems;
+    }
+
+    public void computeClosure() {
         this.closure = getClosure(initItems);
     }
 
