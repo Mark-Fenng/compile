@@ -39,12 +39,16 @@ public class Main {
     /**
      * get closure of item as parameter: initItem
      * 
-     * @param initItem
+     * @param initItem the init item whose closure needed to be computed
+     * @return initItem's closure
      */
     public static List<Item> getClosure(Item initItem) {
+        // init list to store Item in closure
         List<Item> itemSet = new ArrayList<>();
         itemSet.add(initItem);
+        // init set to store added item in one loop round
         Set<Item> addItemSet;
+        // flag if the itemSet has changed in one loop round
         boolean changedFlag = false;
         do {
             changedFlag = false;
@@ -53,12 +57,16 @@ public class Main {
                 if (!item.shouldReduce()) {
                     int state = item.getState();
                     String prefix = item.getSymbols().get(state);
+
+                    // search formula in grammars, whose prefix equals symbol of old item
                     for (Formula formula : grammars) {
                         if (formula.getPrefix().equals(prefix)) {
                             Item newItem = new Item(formula);
                             String tempString = (state + 1 < item.getSymbols().size())
                                     ? item.getSymbols().get(state + 1)
                                     : "";
+
+                            // the item with the same formula and state has been added before
                             if (itemSet.contains(newItem)) {
                                 newItem = itemSet.get(itemSet.indexOf(newItem));
                                 if (newItem.addSearchSymbol(getFirstSet(tempString, item.getSearchSymbol()))) {
