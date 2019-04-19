@@ -94,11 +94,30 @@ public class ItemSet {
     public boolean equals(Object obj) {
         if (obj instanceof ItemSet) {
             ItemSet itemSet = (ItemSet) obj;
-            if (itemSet.getInitItems().containsAll(this.initItems)
-                    && this.initItems.containsAll(itemSet.getInitItems()))
-                return true;
+            for (Item item : this.initItems) {
+                if (itemSet.getInitItems().contains(item)) {
+                    Item itemTemp = itemSet.getInitItems().get(itemSet.getInitItems().indexOf(item));
+                    if (!(itemTemp.getSearchSymbol().containsAll(item.getSearchSymbol())
+                            && item.getSearchSymbol().containsAll(itemTemp.getSearchSymbol())))
+                        return false;
+                } else {
+                    return false;
+                }
+            }
+            for (Item item : itemSet.getInitItems()) {
+                if (this.initItems.contains(item)) {
+                    Item itemTemp = this.initItems.get(this.initItems.indexOf(item));
+                    if (!(itemTemp.getSearchSymbol().containsAll(item.getSearchSymbol())
+                            && item.getSearchSymbol().containsAll(itemTemp.getSearchSymbol())))
+                        return false;
+                } else {
+                    return false;
+                }
+            }
+            return true;
         }
         return false;
+
     }
 
     @Override

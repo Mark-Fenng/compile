@@ -30,7 +30,12 @@ public class LR1 {
         actionTable.add(new HashMap<>());
 
         getItemSets();
-        // System.out.println(gotoTable);
+        System.out.println(gotoTable);
+        System.out.println();
+        System.out.println(actionTable);
+    }
+
+    public static void printItemSet() {
         for (ItemSet it : items) {
             System.out.println("item: " + items.indexOf(it));
             System.out.println(it);
