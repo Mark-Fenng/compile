@@ -5,7 +5,7 @@ end
 #
 
 terminator
-+,*,(,),i,#,ε
++,*,(,),id,#,ε
 
 non-terminator
 S,E,T,F
@@ -17,4 +17,4 @@ E->T
 T->T * F
 T->F
 F->( E )
-F->i
+F->id

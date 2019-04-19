@@ -2,17 +2,11 @@
     "configurations": [
         {
             "type": "java",
-            "name": "CodeLens (Launch) - LR1",
-            "request": "launch",
-            "mainClass": "LR1",
-            "projectName": "lab2"
-        },
-        {
-            "type": "java",
             "name": "CodeLens (Launch) - Main",
             "request": "launch",
             "mainClass": "Main",
-            "projectName": "lab2"
+            "projectName": "lab2",
+            "console": "integratedTerminal"
         }
     ]
 }

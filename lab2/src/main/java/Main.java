@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Collections;
 
 public class Main {
     public static Set<String> terminators = new HashSet<>(), non_terminators = new HashSet<>();
@@ -16,16 +17,83 @@ public class Main {
     public static String endString = "#"; // define the end symbol as variable endString
 
     public static void main(String[] args) throws Exception {
-        String grammarInputFile = "grammarTest.txt";
+        String grammarInputFile = "grammar.txt";
         readGrammar(grammarInputFile);
         for (String term : non_terminators) {
             firstSets.put(term, getFirstSet(term));
         }
-        System.out.println(grammars.get(0).toString());
+        for (String term : terminators) {
+            firstSets.put(term, Collections.singleton(term));
+        }
+
+        Item rootItem = new Item(grammars.get(0));
+        rootItem.addSearchSymbol(Collections.singleton("#"));
+        for (Item item : getClosure(rootItem)) {
+            System.out.println(item.toString());
+            System.out.println(item.getState());
+            System.out.println(item.getSearchSymbol().toString());
+            System.out.println();
+        }
     }
 
-    public static void getClosure(Formula initFormula) {
-        
+    /**
+     * get closure of item as parameter: initItem
+     * 
+     * @param initItem
+     */
+    public static List<Item> getClosure(Item initItem) {
+        List<Item> itemSet = new ArrayList<>();
+        itemSet.add(initItem);
+        Set<Item> addItemSet;
+        boolean changedFlag = false;
+        do {
+            changedFlag = false;
+            addItemSet = new HashSet<>();
+            for (Item item : itemSet) {
+                if (!item.shouldReduce()) {
+                    int state = item.getState();
+                    String prefix = item.getSymbols().get(state);
+                    for (Formula formula : grammars) {
+                        if (formula.getPrefix().equals(prefix)) {
+                            Item newItem = new Item(formula);
+                            String tempString = (state + 1 < item.getSymbols().size())
+                                    ? item.getSymbols().get(state + 1)
+                                    : "";
+                            if (itemSet.contains(newItem)) {
+                                newItem = itemSet.get(itemSet.indexOf(newItem));
+                                if (newItem.addSearchSymbol(getFirstSet(tempString, item.getSearchSymbol()))) {
+                                    changedFlag = true;
+                                }
+                            } else {
+                                newItem.addSearchSymbol(getFirstSet(tempString, item.getSearchSymbol()));
+                                changedFlag = true;
+                                addItemSet.add(newItem);
+                            }
+                        }
+                    }
+                }
+            }
+            itemSet.addAll(addItemSet);
+        } while (changedFlag);
+        return itemSet;
+    }
+
+    /**
+     * @return the firstSets
+     */
+    public static Set<String> getFirstSet(String firstSymbol, Set<String> searchSymbol) {
+        Set<String> firstSet = new HashSet<>();
+        Set<String> tempSet = null;
+        if (!firstSymbol.equals("")) {
+            tempSet = firstSets.get(firstSymbol);
+            firstSet.addAll(tempSet);
+        }
+        if (tempSet == null || tempSet.contains(nullString)) {
+            for (String str : searchSymbol) {
+                firstSet.addAll(firstSets.get(str));
+            }
+        }
+        return firstSet;
     }
 
     /**
