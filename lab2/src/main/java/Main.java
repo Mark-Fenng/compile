@@ -26,11 +26,12 @@ public class Main {
         Item rootItem = new Item(grammars.get(0));
         rootItem.addSearchSymbol(Collections.singleton("#"));
         items.add(new ItemSet(getClosure(rootItem)));
-        gotoTable.add(new HashMap<>());
-        actionTable.add(new HashMap<>());
+        System.out.println(items);
+        // gotoTable.add(new HashMap<>());
+        // actionTable.add(new HashMap<>());
 
-        getItemSets();
-        System.out.println(gotoTable);
+        // getItemSets();
+        // System.out.println(gotoTable);
     }
 
     public static void getItemSets() throws Exception {
