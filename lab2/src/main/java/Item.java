@@ -56,6 +56,13 @@ public class Item extends Formula {
         return super.toString();
     }
 
+    /**
+     * @param state the state to set
+     */
+    public void setState(int state) {
+        this.state = state;
+    }
+
     @Override
     public boolean equals(Object obj) {
         return (obj instanceof Item) && ((Item) obj).getFormula().equals(this.getFormula())

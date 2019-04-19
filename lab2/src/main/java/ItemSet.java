@@ -13,6 +13,11 @@ public class ItemSet {
 
     public void computeClosure() {
         this.closure = getClosure(initItems);
+        for (Item item : this.closure) {
+            if (!item.shouldReduce() && item.getSymbol().equals(LR1.nullString)) {
+                item.setState(1);
+            }
+        }
     }
 
     /**

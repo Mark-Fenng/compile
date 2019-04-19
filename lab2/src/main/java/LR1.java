@@ -61,6 +61,15 @@ public class LR1 {
                             Item newItem = new Item(item.getFormula(), item.getState() + 1);
                             newItem.addSearchSymbol(item.getSearchSymbol());
                             itemTempList.add(newItem);
+                        } else {
+                            for (String str : item.getSearchSymbol()) {
+                                int tempInt = grammars.indexOf(new Formula(item.getFormula()));
+                                int index = items.indexOf(itemClosure);
+                                if (!actionTable.get(index).containsKey(sym))
+                                    actionTable.get(index).put(str, "r" + tempInt);
+                                else
+                                    throw new Exception("Conflict detected!");
+                            }
                         }
                     }
                 }
@@ -77,19 +86,17 @@ public class LR1 {
                         newIndex = items.indexOf(itemTempSet);
                     }
                     if (terminators.contains(sym)) {
-                        actionTable.get(oldIndex).put(sym, "s" + newIndex);
+                        if (!actionTable.get(oldIndex).containsKey(sym))
+                            actionTable.get(oldIndex).put(sym, "s" + newIndex);
+                        else
+                            throw new Exception("Conflict detected!");
                     } else if (non_terminators.contains(sym)) {
-                        gotoTable.get(oldIndex).put(sym, newIndex);
+                        if (!gotoTable.get(oldIndex).containsKey(sym))
+                            gotoTable.get(oldIndex).put(sym, newIndex);
+                        else
+                            throw new Exception("Conflict detected!");
                     } else {
                         throw new Exception("Unsupported symbol:" + sym);
-                    }
-                    for (Item newItem : itemTempSet.getInitItems()) {
-                        if (newItem.shouldReduce()) {
-                            for (String str : newItem.getSearchSymbol()) {
-                                int tempInt = grammars.indexOf(new Formula(newItem.getFormula()));
-                                actionTable.get(newIndex).put(str, "r" + tempInt);
-                            }
-                        }
                     }
                 }
             }
