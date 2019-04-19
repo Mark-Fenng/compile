@@ -30,7 +30,12 @@ public class Main {
         actionTable.add(new HashMap<>());
 
         getItemSets();
-        System.out.println(gotoTable);
+        // System.out.println(gotoTable);
+        for (ItemSet it : items) {
+            System.out.println("item: " + items.indexOf(it));
+            System.out.println(it);
+            System.out.println();
+        }
     }
 
     public static void getItemSets() throws Exception {
