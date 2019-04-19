@@ -28,4 +28,15 @@ public class Formula {
     public List<String> getSymbols() {
         return symbols;
     }
+
+    @Override
+    public String toString() {
+        String suffix = "";
+        for (String str : symbols) {
+            suffix += str;
+            suffix += " ";
+        }
+        suffix = suffix.substring(0, suffix.length() - 1);
+        return prefix + "->" + suffix;
+    }
 }

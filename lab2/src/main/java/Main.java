@@ -21,7 +21,11 @@ public class Main {
         for (String term : non_terminators) {
             firstSets.put(term, getFirstSet(term));
         }
-        System.out.println(firstSets.toString());
+        System.out.println(grammars.get(0).toString());
+    }
+
+    public static void getClosure(Formula initFormula) {
+        
     }
 
     /**

@@ -7,8 +7,8 @@ public class Item extends Formula {
         state = state;
     }
 
-    Item(String formula) {
-        super(formula);
+    Item(Formula formula) {
+        super(formula.toString());
     }
 
     /**
