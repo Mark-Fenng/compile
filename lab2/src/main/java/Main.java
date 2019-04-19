@@ -26,12 +26,11 @@ public class Main {
         Item rootItem = new Item(grammars.get(0));
         rootItem.addSearchSymbol(Collections.singleton("#"));
         items.add(new ItemSet(getClosure(rootItem)));
-        System.out.println(items);
-        // gotoTable.add(new HashMap<>());
-        // actionTable.add(new HashMap<>());
+        gotoTable.add(new HashMap<>());
+        actionTable.add(new HashMap<>());
 
-        // getItemSets();
-        // System.out.println(gotoTable);
+        getItemSets();
+        System.out.println(gotoTable);
     }
 
     public static void getItemSets() throws Exception {
@@ -43,7 +42,7 @@ public class Main {
             itemSet = itemClosure.getItems();
             for (Item item : itemSet) {
                 if (!item.getSymbols().get(0).equals(nullString) && !item.shouldReduce()) {
-                    Item newItem = new Item(item.toString(), item.getState() + 1);
+                    Item newItem = new Item(item.getFormula(), item.getState() + 1);
                     newItem.addSearchSymbol(item.getSearchSymbol());
                     ItemSet tempSet = new ItemSet(Collections.singletonList(newItem));
                     String symbol = item.getSymbols().get(item.getState());
@@ -133,6 +132,9 @@ public class Main {
         Set<String> tempSet = null;
         if (!firstSymbol.equals("")) {
             tempSet = firstSets.get(firstSymbol);
+            if (tempSet == null) {
+                System.out.println(firstSymbol);
+            }
             firstSet.addAll(tempSet);
         }
         if (tempSet == null || tempSet.contains(nullString)) {
