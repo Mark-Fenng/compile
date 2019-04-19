@@ -3,7 +3,7 @@ import java.util.List;
 
 public class Formula {
     private String prefix;
-    private List<String> symbols = new ArrayList();
+    private List<String> symbols = new ArrayList<>();
 
     Formula(String formula) {
         String[] splitResult = formula.split("->");

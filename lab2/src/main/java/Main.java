@@ -6,7 +6,10 @@ import java.util.*;
 public class Main {
     public static Set<String> terminators = new HashSet<>(), non_terminators = new HashSet<>();
     public static List<Formula> grammars = new ArrayList<>();
-    public static Map<String, Set<String>> firstSets = new HashMap<>();
+    public static Map<String, Set<String>> firstSets = new HashMap<>(); // first set of all symbols
+    public static List<ItemSet> items = new ArrayList<>(); // store all item set
+    public static List<Integer> gotoTable = new ArrayList<>(); // store goto table for LR(1)
+    public static List<String> actionTable = new ArrayList<>(); // store action table for LR(1)
     public static String nullString = "ε"; // define the null symbol as variable nullString
     public static String endString = "#"; // define the end symbol as variable endString
 
