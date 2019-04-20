@@ -1,14 +1,21 @@
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 public class ItemSet {
     private List<Item> closure = new ArrayList<>();
-    private List<Item> initItems = new ArrayList<>();
+    private List<Item> initItems = new LinkedList<>();
 
     ItemSet(List<Item> initItems) {
-        this.initItems = initItems;
+        for (Item item : initItems) {
+            if (this.initItems.contains(item)) {
+                this.initItems.get(this.initItems.indexOf(item)).addSearchSymbol(item.getSearchSymbol());
+            }else{
+                this.initItems.add(item);
+            }
+        }
     }
 
     public void computeClosure() {
