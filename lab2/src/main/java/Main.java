@@ -28,7 +28,7 @@ public class Main {
         System.out.println();
         // System.out.println("Variable table:");
         // for (String str : analyse.getVariable().getWordList()) {
-        //     System.out.println(str);
+        // System.out.println(str);
         // }
 
         String grammarInputFile = "grammar_rules.txt";
@@ -92,7 +92,7 @@ public class Main {
                 }
             } else {
                 System.err.println("Error occurred at token " + top);
-                break;
+                return;
             }
         }
         System.out.println("accepted");
