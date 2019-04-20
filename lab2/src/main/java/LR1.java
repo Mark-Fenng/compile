@@ -43,43 +43,68 @@ public class LR1 {
         }
     }
 
+    /**
+     * compute all item set and fill in the GOTO table and ACTION table using broad
+     * search first algorithm
+     * 
+     * @throws Exception when fill in tables, conflicts are detected
+     */
     public static void getItemSets() throws Exception {
-        Queue<ItemSet> queue = new LinkedList<>();
-        queue.add(items.get(0));
-        List<Item> itemSet;
+        Queue<ItemSet> queue = new LinkedList<>(); // store all item set need to iterate
+        queue.add(items.get(0)); // init queue with item 0
         while (queue.size() != 0) {
+            // store item set locally and pop old item set from queue
             ItemSet itemClosure = queue.poll();
-            itemSet = itemClosure.getClosure();
+            // store item list locally
+            List<Item> itemSet = itemClosure.getClosure();
+            // store all symbols including all terminators and non-terminators
             List<String> symbols = new ArrayList<>();
             symbols.addAll(terminators);
             symbols.addAll(non_terminators);
+
+            // iterate all symbols
             for (String sym : symbols) {
+
+                // store all new added item whose state need to be transformed
                 List<Item> itemTempList = new ArrayList<>();
                 for (Item item : itemSet) {
+
+                    // the item should not be reduced currently
                     if (!item.shouldReduce() && item.getSymbol().equals(sym)) {
                         Item newItem = new Item(item.getFormula(), item.getState() + 1);
                         newItem.addSearchSymbol(item.getSearchSymbol());
                         itemTempList.add(newItem);
                     }
                 }
+
+                // has new transformed item to form new item set
                 if (itemTempList.size() != 0) {
                     ItemSet itemTempSet = new ItemSet(itemTempList);
+                    // store origin item set's item id
                     int oldIndex = items.indexOf(itemClosure);
+                    // store new formed item set's item id
                     int newIndex = oldIndex;
+
+                    // judge if new formed item set has been stored
                     if (!items.contains(itemTempSet)) {
+                        // compute closure of new formed item set
                         itemTempSet.computeClosure();
                         items.add(itemTempSet);
                         gotoTable.add(new HashMap<>());
                         actionTable.add(new HashMap<>());
+                        // add new formed item set into queue
                         queue.offer(itemTempSet);
+                        // get new formed item set's item id
                         newIndex = items.indexOf(itemTempSet);
                     }
+
+                    // shifted symbol is one of terminators
                     if (terminators.contains(sym)) {
                         if (!actionTable.get(oldIndex).containsKey(sym))
                             actionTable.get(oldIndex).put(sym, "s" + newIndex);
                         else
                             throw new Exception("Conflict detected!");
-                    } else if (non_terminators.contains(sym)) {
+                    } else if (non_terminators.contains(sym)) { // shifted symbol is one of non-terminators
                         if (!gotoTable.get(oldIndex).containsKey(sym))
                             gotoTable.get(oldIndex).put(sym, newIndex);
                         else
@@ -89,10 +114,17 @@ public class LR1 {
                     }
                 }
             }
+
+            // handle item which is in reduced state separately
             for (Item item : itemSet) {
                 if (item.shouldReduce()) {
+
+                    // iterate all symbol in item's search symbols
                     for (String str : item.getSearchSymbol()) {
+
+                        // get id of formula which is reduced
                         int tempInt = grammars.indexOf(new Formula(item.getFormula()));
+                        // get and store id of current item set
                         int index = items.indexOf(itemClosure);
                         if (!actionTable.get(index).containsKey(str))
                             actionTable.get(index).put(str, "r" + tempInt);
