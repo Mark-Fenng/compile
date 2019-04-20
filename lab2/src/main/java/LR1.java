@@ -12,12 +12,10 @@ public class LR1 {
     public static List<HashMap<String, String>> actionTable = new ArrayList<>(); // store action table for LR(1)
     public static String nullString = "ε"; // define the null symbol as variable nullString
     public static String endString = "#"; // define the end symbol as variable endString
-    public static String separatorString = "->";
+    public static String separatorString = "->"; // define formula separator symbol as variable separatorString
 
     LR1(String grammarInputFile) throws Exception {
         readGrammar(grammarInputFile);
-        System.out.println(terminators);
-        System.out.println(non_terminators);
         for (String term : non_terminators) {
             firstSets.put(term, getFirstSet(term));
         }
