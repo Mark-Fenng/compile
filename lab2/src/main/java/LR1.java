@@ -12,9 +12,12 @@ public class LR1 {
     public static List<HashMap<String, String>> actionTable = new ArrayList<>(); // store action table for LR(1)
     public static String nullString = "ε"; // define the null symbol as variable nullString
     public static String endString = "#"; // define the end symbol as variable endString
+    public static String separatorString = "->";
 
     LR1(String grammarInputFile) throws Exception {
         readGrammar(grammarInputFile);
+        System.out.println(terminators);
+        System.out.println(non_terminators);
         for (String term : non_terminators) {
             firstSets.put(term, getFirstSet(term));
         }
@@ -126,10 +129,17 @@ public class LR1 {
                         int tempInt = grammars.indexOf(new Formula(item.getFormula()));
                         // get and store id of current item set
                         int index = items.indexOf(itemClosure);
-                        if (!actionTable.get(index).containsKey(str))
-                            actionTable.get(index).put(str, "r" + tempInt);
-                        else
-                            throw new Exception("Conflict detected!");
+                        if (tempInt == 0) {
+                            if (!actionTable.get(index).containsKey(str))
+                                actionTable.get(index).put(str, "acc");
+                            else
+                                throw new Exception("Conflict detected!");
+                        } else {
+                            if (!actionTable.get(index).containsKey(str))
+                                actionTable.get(index).put(str, "r" + tempInt);
+                            else
+                                throw new Exception("Conflict detected!");
+                        }
                     }
                 }
             }
@@ -220,7 +230,7 @@ public class LR1 {
      * 
      * file format example
      * 
-     * null
+     * ε
      * 
      * E
      * 
@@ -236,6 +246,10 @@ public class LR1 {
      * 
      * C
      * 
+     * separator
+     * 
+     * ->
+     * 
      * grammar
      * 
      * C->a + b
@@ -246,59 +260,37 @@ public class LR1 {
     public static void readGrammar(String filePath) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
         String line;
-        boolean terminator = false, non_terminator = false, grammar = false, readNull = false, readEnd = false;
+        boolean grammar = false, readNull = false, readEnd = false, separator = false;
         while ((line = bufferedReader.readLine()) != null) {
             if (!line.equals("")) {
                 if (!line.equals("")) {
                     switch (line.toLowerCase()) {
-                    case "terminator":
-                        terminator = true;
-                        non_terminator = false;
-                        grammar = false;
-                        readNull = false;
-                        readEnd = false;
-                        break;
-                    case "non-terminator":
-                        terminator = false;
-                        non_terminator = true;
-                        grammar = false;
-                        readNull = false;
-                        readEnd = false;
-                        break;
                     case "grammar":
-                        terminator = false;
-                        non_terminator = false;
                         grammar = true;
                         readNull = false;
                         readEnd = false;
+                        separator = false;
                         break;
                     case "null":
-                        terminator = false;
-                        non_terminator = false;
                         grammar = false;
                         readNull = true;
                         readEnd = false;
+                        separator = false;
                         break;
                     case "end":
-                        terminator = false;
-                        non_terminator = false;
                         grammar = false;
                         readNull = false;
                         readEnd = true;
+                        separator = false;
                         break;
-
+                    case "separator":
+                        grammar = false;
+                        readNull = false;
+                        readEnd = false;
+                        separator = true;
+                        break;
                     default:
                         break;
-                    }
-                }
-                if (!line.toLowerCase().equals("terminator") && terminator) {
-                    for (String str : line.split(",")) {
-                        terminators.add(str);
-                    }
-                }
-                if (!line.toLowerCase().equals("non-terminator") && non_terminator) {
-                    for (String str : line.split(",")) {
-                        non_terminators.add(str);
                     }
                 }
                 if (!line.toLowerCase().equals("grammar") && grammar) {
@@ -310,8 +302,21 @@ public class LR1 {
                 if (!line.toLowerCase().equals("end") && readEnd) {
                     endString = line;
                 }
+                if (!line.toLowerCase().equals("separator") && separator) {
+                    separatorString = line;
+                }
             }
         }
         bufferedReader.close();
+        Set<String> symbols = new HashSet<>();
+        for (Formula formula : grammars) {
+            non_terminators.add(formula.getPrefix());
+            symbols.add(formula.getPrefix());
+            symbols.addAll(formula.getSymbols());
+        }
+        symbols.removeAll(non_terminators);
+        terminators.addAll(symbols);
+        terminators.add(nullString);
+        terminators.add(endString);
     }
 }

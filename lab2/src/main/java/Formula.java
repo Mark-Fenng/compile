@@ -6,7 +6,7 @@ public class Formula {
     private List<String> symbols = new ArrayList<>();
 
     Formula(String formula) {
-        String[] splitResult = formula.split("->");
+        String[] splitResult = formula.split(LR1.separatorString);
         prefix = splitResult[0];
         String suffix = splitResult[1];
         splitResult = suffix.split(" ");
@@ -37,7 +37,7 @@ public class Formula {
             suffix += " ";
         }
         suffix = suffix.substring(0, suffix.length() - 1);
-        return prefix + "->" + suffix;
+        return prefix + LR1.separatorString + suffix;
     }
 
     @Override

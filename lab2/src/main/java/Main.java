@@ -5,7 +5,7 @@ import java.util.Stack;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        String grammarInputFile = "grammar.txt";
+        String grammarInputFile = "grammarTest2.txt";
         new LR1(grammarInputFile);
         String inputFilePath = "input.txt";
         BufferedReader bufferedReader = new BufferedReader(new FileReader(inputFilePath));
@@ -14,6 +14,7 @@ public class Main {
         while ((line = bufferedReader.readLine()) != null) {
             content += line;
         }
+        bufferedReader.close();
         int top = 0;
         Stack<String> symbolStack = new Stack<>();
         Stack<Integer> stateStack = new Stack<>();
@@ -54,5 +55,6 @@ public class Main {
                 }
             }
         }
+        System.out.println("accepted");
     }
 }

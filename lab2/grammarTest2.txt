@@ -1,0 +1,13 @@
+null
+E
+end
+#
+separator
+:
+
+grammar
+s:a
+a:b a
+a:E
+b:A b
+b:B
