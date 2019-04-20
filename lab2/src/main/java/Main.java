@@ -27,26 +27,45 @@ public class Main {
                 String actionType = String.valueOf(action.charAt(0));
                 final String SHIFT = "s";
                 final String REDUCE = "r";
-                Integer actionState = Integer.parseInt(action.substring(1, action.length()));
+                Integer actionState = null;
+                if (!action.equals("acc")) {
+                    actionState = Integer.parseInt(action.substring(1, action.length()));
+                }
                 if (actionType.equals(SHIFT)) {
                     symbolStack.push(symbol);
                     stateStack.push(actionState);
+                    System.out.println("Action " + action);
+                    System.out.println(symbolStack);
+                    System.out.println(stateStack);
+                    System.out.println();
+                    top += 1;
                 } else if (actionType.equals(REDUCE)) {
                     Formula formula = LR1.grammars.get(actionState);
                     List<String> formulaRight = formula.getSymbols();
                     Stack<String> stackFormulaRight = new Stack<>();
-                    for (int i = 0; i < formulaRight.size(); i++) {
-                        stackFormulaRight.push(symbolStack.pop());
-                    }
-                    for (String str : formulaRight) {
-                        if (!str.equals(stackFormulaRight.pop())) {
-                            throw new Exception("Error occurs when reducing");
+                    if (!(formulaRight.size() == 1 && formulaRight.get(0).equals(LR1.nullString))) {
+                        for (int i = 0; i < formulaRight.size(); i++) {
+                            stackFormulaRight.push(symbolStack.pop());
+                            stateStack.pop();
+                        }
+                        for (String str : formulaRight) {
+                            if (!str.equals(stackFormulaRight.pop())) {
+                                throw new Exception("Error occurs when reducing");
+                            }
                         }
                     }
                     symbolStack.push(formula.getPrefix());
-                    stateStack.pop();
+                    System.out.println("Action " + action);
+                    System.out.println(symbolStack);
+                    System.out.println(stateStack);
+                    System.out.println();
                     if (LR1.gotoTable.get(stateStack.peek()).containsKey(symbolStack.peek())) {
+                        int oldState = stateStack.peek();
                         stateStack.push(LR1.gotoTable.get(stateStack.peek()).get(symbolStack.peek()));
+                        System.out.println("goto(" + oldState + "," + symbolStack.peek() + ")");
+                        System.out.println(symbolStack);
+                        System.out.println(stateStack);
+                        System.out.println();
                     }
                 } else if (action.equals("acc")) {
                     break;

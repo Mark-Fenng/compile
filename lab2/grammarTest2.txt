@@ -6,6 +6,7 @@ separator
 :
 
 grammar
+s':s
 s:a
 a:b a
 a:E

@@ -97,6 +97,8 @@ public class LR1 {
                         queue.offer(itemTempSet);
                         // get new formed item set's item id
                         newIndex = items.indexOf(itemTempSet);
+                    } else {
+                        newIndex = items.indexOf(itemTempSet);
                     }
 
                     // shifted symbol is one of terminators
