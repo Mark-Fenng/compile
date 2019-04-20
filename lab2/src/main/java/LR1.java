@@ -60,15 +60,7 @@ public class LR1 {
                         Item newItem = new Item(item.getFormula(), item.getState() + 1);
                         newItem.addSearchSymbol(item.getSearchSymbol());
                         itemTempList.add(newItem);
-                    } else if (item.shouldReduce()) {
-                        for (String str : item.getSearchSymbol()) {
-                            int tempInt = grammars.indexOf(new Formula(item.getFormula()));
-                            int index = items.indexOf(itemClosure);
-                            if (!actionTable.get(index).containsKey(sym))
-                                actionTable.get(index).put(str, "r" + tempInt);
-                        }
                     }
-
                 }
                 if (itemTempList.size() != 0) {
                     ItemSet itemTempSet = new ItemSet(itemTempList);
@@ -97,38 +89,18 @@ public class LR1 {
                     }
                 }
             }
-
-            // for (Item item : itemSet) {
-            // if (!item.getSymbols().get(0).equals(nullString) && !item.shouldReduce()) {
-            // Item newItem = new Item(item.getFormula(), item.getState() + 1);
-            // newItem.addSearchSymbol(item.getSearchSymbol());
-            // ItemSet tempSet = new ItemSet(Collections.singletonList(newItem));
-            // String symbol = item.getSymbols().get(item.getState());
-            // int oldIndex = items.indexOf(itemClosure);
-            // int newIndex = oldIndex;
-            // if (!items.contains(tempSet)) {
-            // tempSet = new ItemSet(getClosure(newItem));
-            // items.add(tempSet);
-            // gotoTable.add(new HashMap<>());
-            // actionTable.add(new HashMap<>());
-            // queue.offer(tempSet);
-            // newIndex = items.indexOf(tempSet);
-            // }
-            // if (terminators.contains(symbol)) {
-            // actionTable.get(oldIndex).put(symbol, "s" + newIndex);
-            // } else if (non_terminators.contains(symbol)) {
-            // gotoTable.get(oldIndex).put(symbol, newIndex);
-            // } else {
-            // throw new Exception("Unsupported symbol:" + symbol);
-            // }
-            // if (newItem.shouldReduce()) {
-            // for (String str : newItem.getSymbols()) {
-            // int tempInt = grammars.indexOf(newItem.getFormula());
-            // actionTable.get(newIndex).put(str, "r" + tempInt);
-            // }
-            // }
-            // }
-            // }
+            for (Item item : itemSet) {
+                if (item.shouldReduce()) {
+                    for (String str : item.getSearchSymbol()) {
+                        int tempInt = grammars.indexOf(new Formula(item.getFormula()));
+                        int index = items.indexOf(itemClosure);
+                        if (!actionTable.get(index).containsKey(str))
+                            actionTable.get(index).put(str, "r" + tempInt);
+                        else
+                            throw new Exception("Conflict detected!");
+                    }
+                }
+            }
         }
     }
 
