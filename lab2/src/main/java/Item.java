@@ -63,10 +63,16 @@ public class Item extends Formula {
         this.state = state;
     }
 
+    public boolean equalsItem(Item item) {
+        return this.getFormula().equals(item.getFormula()) && this.state == item.getState();
+    }
+
     @Override
     public boolean equals(Object obj) {
         return (obj instanceof Item) && ((Item) obj).getFormula().equals(this.getFormula())
-                && ((Item) obj).getState() == this.state;
+                && ((Item) obj).getState() == this.state
+                && ((Item) obj).getSearchSymbol().containsAll(this.searchSymbol)
+                && this.searchSymbol.containsAll(((Item) obj).getSearchSymbol());
     }
 
     @Override

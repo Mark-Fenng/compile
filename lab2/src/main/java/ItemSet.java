@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,12 +11,23 @@ public class ItemSet {
 
     ItemSet(List<Item> initItems) {
         for (Item item : initItems) {
-            if (this.initItems.contains(item)) {
-                this.initItems.get(this.initItems.indexOf(item)).addSearchSymbol(item.getSearchSymbol());
-            }else{
+            int index = contains(this.initItems, item);
+            if (index != -1) {
+                this.initItems.get(index).addSearchSymbol(item.getSearchSymbol());
+            } else {
                 this.initItems.add(item);
             }
         }
+    }
+
+    private static int contains(List<Item> list, Item item) {
+        int index = -1;
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).equalsItem(item)) {
+                index = i;
+            }
+        }
+        return index;
     }
 
     public void computeClosure() {
@@ -68,9 +80,10 @@ public class ItemSet {
                                     ? item.getSymbols().get(state + 1)
                                     : "";
 
+                            int index = contains(itemSet, newItem);
                             // the item with the same formula and state has been added before
-                            if (itemSet.contains(newItem)) {
-                                newItem = itemSet.get(itemSet.indexOf(newItem));
+                            if (index != -1) {
+                                newItem = itemSet.get(index);
                                 if (newItem.addSearchSymbol(LR1.getFirstSet(tempString, item.getSearchSymbol()))) {
                                     changedFlag = true;
                                 }
@@ -106,27 +119,7 @@ public class ItemSet {
     public boolean equals(Object obj) {
         if (obj instanceof ItemSet) {
             ItemSet itemSet = (ItemSet) obj;
-            for (Item item : this.initItems) {
-                if (itemSet.getInitItems().contains(item)) {
-                    Item itemTemp = itemSet.getInitItems().get(itemSet.getInitItems().indexOf(item));
-                    if (!(itemTemp.getSearchSymbol().containsAll(item.getSearchSymbol())
-                            && item.getSearchSymbol().containsAll(itemTemp.getSearchSymbol())))
-                        return false;
-                } else {
-                    return false;
-                }
-            }
-            for (Item item : itemSet.getInitItems()) {
-                if (this.initItems.contains(item)) {
-                    Item itemTemp = this.initItems.get(this.initItems.indexOf(item));
-                    if (!(itemTemp.getSearchSymbol().containsAll(item.getSearchSymbol())
-                            && item.getSearchSymbol().containsAll(itemTemp.getSearchSymbol())))
-                        return false;
-                } else {
-                    return false;
-                }
-            }
-            return true;
+            return itemSet.getInitItems().containsAll(this.initItems) && this.initItems.containsAll(itemSet.initItems);
         }
         return false;
 
