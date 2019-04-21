@@ -72,6 +72,7 @@ public class Main {
                             }
                         }
                     }
+                    System.out.println(formula.toString());
                     symbolStack.push(formula.getPrefix());
                     System.out.println("Action " + action);
                     System.out.println(symbolStack);
