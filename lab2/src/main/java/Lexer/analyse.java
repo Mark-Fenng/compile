@@ -84,7 +84,7 @@ public class analyse {
             }
             if (getChar(index) == '.') {
                 if (floatFlag) {
-                    throw new Exception("Wrong digit");
+                    throw new Exception("Wrong digit: " + digit + getChar(index));
                 } else {
                     floatFlag = true;
                 }
