@@ -3,7 +3,7 @@ import java.util.List;
 
 public class wordTable {
     private String type;
-    private List<String> wordList = new ArrayList();
+    private List<String> wordList = new ArrayList<>();
 
     /**
      * @return the type

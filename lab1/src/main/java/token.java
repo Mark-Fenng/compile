@@ -2,11 +2,13 @@ public class token {
     private String type;
     private String originWord;
     private int tableIndex;
+    private String tokenValue;
 
-    token(String type, String word, int index) {
+    public token(String type, String word, int index, String tokenValue) {
         this.type = type;
         this.originWord = word;
         this.tableIndex = index;
+        this.tokenValue = tokenValue;
     }
 
     /**
@@ -14,6 +16,13 @@ public class token {
      */
     public String getType() {
         return type;
+    }
+
+    /**
+     * @return the tokenValue
+     */
+    public String getTokenValue() {
+        return tokenValue;
     }
 
     /**
