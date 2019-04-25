@@ -14,12 +14,12 @@ public class Main {
         while ((line = bufferedReader.readLine()) != null)
             content += line;
         bufferedReader.close();
-        analyse analyse = new analyse(content);
+        Analyse analyse = new Analyse(content);
         analyse.parse();
-        analyse.getTokenList().add(new token("", LR1.endString, 0, LR1.endString));
+        analyse.getTokenList().add(new Token("", LR1.endString, 0, LR1.endString));
         System.out.println("Token table:");
         System.out.println("Token type value token value");
-        for (token t : analyse.getTokenList()) {
+        for (Token t : analyse.getTokenList()) {
             System.out.print("< " + t.getType() + " ,");
             System.out.print(" " + t.getOriginWord() + " ,");
             // System.out.print(" " + t.getTableIndex() + " ,");
@@ -35,14 +35,14 @@ public class Main {
         String grammarInputFile = "grammar.txt";
         new LR1(grammarInputFile);
         int top = 0;
-        Stack<String> symbolStack = new Stack<>();
+        Stack<Token> symbolStack = new Stack<>();
         Stack<Integer> stateStack = new Stack<>();
-        symbolStack.push(LR1.endString);
+        symbolStack.push(new Token("punctuation", LR1.endString, 0, LR1.endString));
         stateStack.push(0);
         while (true) {
-            String symbol = analyse.getTokenList().get(top).getTokenValue();
-            if (LR1.actionTable.get(stateStack.peek()).containsKey(symbol)) {
-                String action = LR1.actionTable.get(stateStack.peek()).get(symbol);
+            Token symbol = analyse.getTokenList().get(top);
+            if (LR1.actionTable.get(stateStack.peek()).containsKey(symbol.getTokenValue())) {
+                String action = LR1.actionTable.get(stateStack.peek()).get(symbol.getTokenValue());
                 String actionType = String.valueOf(action.charAt(0));
                 final String SHIFT = "s";
                 final String REDUCE = "r";
@@ -64,7 +64,7 @@ public class Main {
                     Stack<String> stackFormulaRight = new Stack<>();
                     if (!(formulaRight.size() == 1 && formulaRight.get(0).equals(LR1.nullString))) {
                         for (int i = 0; i < formulaRight.size(); i++) {
-                            stackFormulaRight.push(symbolStack.pop());
+                            stackFormulaRight.push(symbolStack.pop().getTokenValue());
                             stateStack.pop();
                         }
                         for (String str : formulaRight) {
@@ -73,16 +73,17 @@ public class Main {
                             }
                         }
                     }
+                    // action(formula);
                     System.out.println(formula.toString());
-                    symbolStack.push(formula.getPrefix());
+                    symbolStack.push(new Token("Non-Terminator", formula.getPrefix(), 0, formula.getPrefix()));
                     System.out.println("Action " + action);
                     System.out.println(symbolStack);
                     System.out.println(stateStack);
                     System.out.println();
-                    if (LR1.gotoTable.get(stateStack.peek()).containsKey(symbolStack.peek())) {
+                    if (LR1.gotoTable.get(stateStack.peek()).containsKey(symbolStack.peek().getTokenValue())) {
                         int oldState = stateStack.peek();
-                        stateStack.push(LR1.gotoTable.get(stateStack.peek()).get(symbolStack.peek()));
-                        System.out.println("goto(" + oldState + "," + symbolStack.peek() + ")");
+                        stateStack.push(LR1.gotoTable.get(stateStack.peek()).get(symbolStack.peek().getTokenValue()));
+                        System.out.println("goto(" + oldState + "," + symbolStack.peek().getTokenValue() + ")");
                         System.out.println(symbolStack);
                         System.out.println(stateStack);
                         System.out.println();

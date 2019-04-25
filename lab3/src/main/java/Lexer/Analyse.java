@@ -4,18 +4,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class analyse {
-    private final wordTable reserved = new wordTable();
-    private final wordTable variable = new wordTable();
-    private final wordTable punctuation = new wordTable();
-    private final wordTable punctuationTokens = new wordTable();
-    private final wordTable operators = new wordTable();
-    private final wordTable operatorTokens = new wordTable();
-    private final List<token> tokenList = new ArrayList<>();
+public class Analyse {
+    private final WordTable reserved = new WordTable();
+    private final WordTable variable = new WordTable();
+    private final WordTable punctuation = new WordTable();
+    private final WordTable punctuationTokens = new WordTable();
+    private final WordTable operators = new WordTable();
+    private final WordTable operatorTokens = new WordTable();
+    private final List<Token> tokenList = new ArrayList<>();
     private final String content;
     private int index = 0;
 
-    public analyse(String content) {
+    public Analyse(String content) {
 
         reserved.setWordList(Arrays.asList("var", "val", "func", "if", "elif", "else", "while", "for", "return",
                 "break", "continue"));
@@ -35,23 +35,23 @@ public class analyse {
             while (index < content.length()) {
                 if (Character.isDigit(getChar(index)) || getChar(index) == '-') {
                     String digit = getDigit();
-                    tokenList.add(new token("number", digit, 0, "CONSTANT"));
+                    tokenList.add(new Token("number", digit, 0, "CONSTANT"));
                 } else if (Character.isLetter(getChar(index)) || getChar(index) == '_') {
                     String word = getWord();
                     if (reserved.getWordList().contains(word)) {
                         tokenList.add(
-                                new token("reserved", word, reserved.getWordList().indexOf(word), word.toUpperCase()));
+                                new Token("reserved", word, reserved.getWordList().indexOf(word), word.toUpperCase()));
                     } else {
                         int tableIndex = variable.addWord(word);
-                        tokenList.add(new token("variable", word, tableIndex, "IDENTIFIER"));
+                        tokenList.add(new Token("variable", word, tableIndex, "IDENTIFIER"));
                     }
                 } else if (getChar(index) == '/' && index + 1 < content.length() && getChar(index + 1) == '*') {
                     String comment = getComment();
-                    tokenList.add(new token("comment", comment, 0, "COMMENT"));
+                    tokenList.add(new Token("comment", comment, 0, "COMMENT"));
                 } else {
                     if (punctuation.getWordList().contains("" + getChar(index))) {
                         if (!(getChar(index) == '=' && index + 1 < content.length() && getChar(index + 1) == '=')) {
-                            tokenList.add(new token("punctuation", "" + getChar(index),
+                            tokenList.add(new Token("punctuation", "" + getChar(index),
                                     punctuation.getWordList().indexOf("" + getChar(index)),
                                     punctuationTokens.getWordList()
                                             .get(punctuation.getWordList().indexOf(String.valueOf(getChar(index))))));
@@ -61,7 +61,7 @@ public class analyse {
                     }
                     String operator = getOperator();
                     if (!operator.equals("")) {
-                        tokenList.add(new token("operator", operator,
+                        tokenList.add(new Token("operator", operator,
                                 operators.getWordList().indexOf(String.valueOf(operator)),
                                 operatorTokens.getWordList().get(
                                         operators.getWordList().indexOf(String.valueOf(String.valueOf(operator))))));
@@ -196,14 +196,14 @@ public class analyse {
     /**
      * @return the tokenList
      */
-    public List<token> getTokenList() {
+    public List<Token> getTokenList() {
         return tokenList;
     }
 
     /**
      * @return the variable
      */
-    public wordTable getVariable() {
+    public WordTable getVariable() {
         return variable;
     }
 }
