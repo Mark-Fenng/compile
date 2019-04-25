@@ -57,7 +57,7 @@ public class Token {
 
     @Override
     public String toString() {
-        return this.tokenValue;
+        return this.originWord;
     }
 }
 // reserved, operator, punctuation, variable, number, comment

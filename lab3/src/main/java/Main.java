@@ -1,8 +1,8 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 import Lexer.*;
+import Semantics.Semantics;
 import Grammar.*;
 
 public class Main {
@@ -17,16 +17,16 @@ public class Main {
         Analyse analyse = new Analyse(content);
         analyse.parse();
         analyse.getTokenList().add(new Token("", LR1.endString, 0, LR1.endString));
-        System.out.println("Token table:");
-        System.out.println("Token type value token value");
-        for (Token t : analyse.getTokenList()) {
-            System.out.print("< " + t.getType() + " ,");
-            System.out.print(" " + t.getOriginWord() + " ,");
-            // System.out.print(" " + t.getTableIndex() + " ,");
-            System.out.print(" " + t.getTokenValue() + " >");
-            System.out.println();
-        }
-        System.out.println();
+        // System.out.println("Token table:");
+        // System.out.println("Token type value token value");
+        // for (Token t : analyse.getTokenList()) {
+        //     System.out.print("< " + t.getType() + " ,");
+        //     System.out.print(" " + t.getOriginWord() + " ,");
+        //     // System.out.print(" " + t.getTableIndex() + " ,");
+        //     System.out.print(" " + t.getTokenValue() + " >");
+        //     System.out.println();
+        // }
+        // System.out.println();
         // System.out.println("Variable table:");
         // for (String str : analyse.getVariable().getWordList()) {
         // System.out.println(str);
@@ -34,6 +34,8 @@ public class Main {
 
         String grammarInputFile = "grammar.txt";
         new LR1(grammarInputFile);
+        Semantics semantics = new Semantics();
+
         int top = 0;
         Stack<Token> symbolStack = new Stack<>();
         Stack<Integer> stateStack = new Stack<>();
@@ -53,40 +55,46 @@ public class Main {
                 if (actionType.equals(SHIFT)) {
                     symbolStack.push(symbol);
                     stateStack.push(actionState);
-                    System.out.println("Action " + action);
-                    System.out.println(symbolStack);
-                    System.out.println(stateStack);
-                    System.out.println();
+                    // System.out.println("Action " + action);
+                    // System.out.println(symbolStack);
+                    // System.out.println(stateStack);
+                    // System.out.println();
                     top += 1;
                 } else if (actionType.equals(REDUCE)) {
                     Formula formula = LR1.grammars.get(actionState);
                     List<String> formulaRight = formula.getSymbols();
-                    Stack<String> stackFormulaRight = new Stack<>();
+                    Stack<Token> stackFormulaRight = new Stack<>();
+                    Token formulaLeft = new Token("Non-Terminator", formula.getPrefix(), 0, formula.getPrefix());
+                    List<Token> tokenList = new ArrayList<>();
+                    tokenList.add(formulaLeft);
                     if (!(formulaRight.size() == 1 && formulaRight.get(0).equals(LR1.nullString))) {
                         for (int i = 0; i < formulaRight.size(); i++) {
-                            stackFormulaRight.push(symbolStack.pop().getTokenValue());
+                            stackFormulaRight.push(symbolStack.pop());
                             stateStack.pop();
                         }
                         for (String str : formulaRight) {
-                            if (!str.equals(stackFormulaRight.pop())) {
+                            Token temp = stackFormulaRight.pop();
+                            tokenList.add(temp);
+                            if (!str.equals(temp.getTokenValue())) {
                                 throw new Exception("Error occurs when reducing");
                             }
                         }
                     }
-                    // action(formula);
-                    System.out.println(formula.toString());
-                    symbolStack.push(new Token("Non-Terminator", formula.getPrefix(), 0, formula.getPrefix()));
-                    System.out.println("Action " + action);
-                    System.out.println(symbolStack);
-                    System.out.println(stateStack);
-                    System.out.println();
+                    semantics.action(formula, tokenList);
+                    symbolStack.push(formulaLeft);
+                    // System.out.println(formula.toString());
+                    // System.out.println("Action " + action);
+                    // System.out.println(symbolStack);
+                    // System.out.println(stateStack);
+                    // System.out.println();
                     if (LR1.gotoTable.get(stateStack.peek()).containsKey(symbolStack.peek().getTokenValue())) {
-                        int oldState = stateStack.peek();
+                        // int oldState = stateStack.peek();
                         stateStack.push(LR1.gotoTable.get(stateStack.peek()).get(symbolStack.peek().getTokenValue()));
-                        System.out.println("goto(" + oldState + "," + symbolStack.peek().getTokenValue() + ")");
-                        System.out.println(symbolStack);
-                        System.out.println(stateStack);
-                        System.out.println();
+                        // System.out.println("goto(" + oldState + "," +
+                        // symbolStack.peek().getTokenValue() + ")");
+                        // System.out.println(symbolStack);
+                        // System.out.println(stateStack);
+                        // System.out.println();
                     }
                 } else if (action.equals("acc")) {
                     break;
