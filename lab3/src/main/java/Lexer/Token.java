@@ -56,6 +56,17 @@ public class Token {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Token) {
+            Token objToken = (Token) obj;
+            return objToken.getOriginWord().equals(this.originWord) && objToken.getTableIndex() == this.tableIndex
+                    && objToken.getTokenValue().equals(this.tokenValue) && objToken.getType().equals(this.type);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
     public String toString() {
         return this.originWord;
     }
