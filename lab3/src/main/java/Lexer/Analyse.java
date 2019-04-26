@@ -33,6 +33,10 @@ public class Analyse {
     public void parse() {
         try {
             while (index < content.length()) {
+                if (getChar(index) == '\n') {
+                    index++;
+                    continue;
+                }
                 if (Character.isDigit(getChar(index)) || getChar(index) == '-') {
                     String digit = getDigit();
                     tokenList.add(new Token("number", digit, 0, "CONSTANT"));
