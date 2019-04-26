@@ -44,7 +44,7 @@ public class AST {
         int top = 0;
         Stack<Node> symbolStack = new Stack<>();
         Stack<Integer> stateStack = new Stack<>();
-        symbolStack.push(new Node(new Token("punctuation", LR1.endString, 0, LR1.endString)));
+        symbolStack.push(new Node(new Token("punctuation", LR1.endString, 0, LR1.endString, -1)));
         stateStack.push(0);
         while (true) {
             Node symbol = new Node(analyse.getTokenList().get(top));
@@ -71,7 +71,7 @@ public class AST {
                     List<String> formulaRight = formula.getSymbols();
                     Stack<Node> stackFormulaRight = new Stack<>();
                     Node formulaLeft = new Node(
-                            new Token("Non-Terminator", formula.getPrefix(), 0, formula.getPrefix()));
+                            new Token("Non-Terminator", formula.getPrefix(), 0, formula.getPrefix(), -1));
                     List<Node> nodeList = new ArrayList<>();
                     if (!(formulaRight.size() == 1 && formulaRight.get(0).equals(LR1.nullString))) {
                         for (int i = 0; i < formulaRight.size(); i++) {

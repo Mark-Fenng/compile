@@ -203,7 +203,7 @@ public class Gui extends JFrame implements ActionListener {
                 // 词法分析
                 analyse = new Analyse(ta_input.getText());
                 analyse.parse();
-                analyse.getTokenList().add(new Token("", LR1.endString, 0, LR1.endString));
+                analyse.getTokenList().add(new Token("", LR1.endString, 0, LR1.endString, -1));
                 addToken(analyse.getTokenList(), tbmodel_lex_result);
                 // 句法分析
                 try {

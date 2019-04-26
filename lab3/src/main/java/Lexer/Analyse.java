@@ -14,6 +14,7 @@ public class Analyse {
     private final List<Token> tokenList = new ArrayList<>();
     private final String content;
     private int index = 0;
+    private int lineNumber = 0;
 
     public Analyse(String content) {
 
@@ -35,30 +36,32 @@ public class Analyse {
             while (index < content.length()) {
                 if (getChar(index) == '\n') {
                     index++;
+                    lineNumber++;
                     continue;
                 }
                 if (Character.isDigit(getChar(index)) || getChar(index) == '-') {
                     String digit = getDigit();
-                    tokenList.add(new Token("number", digit, 0, "CONSTANT"));
+                    tokenList.add(new Token("number", digit, 0, "CONSTANT", lineNumber));
                 } else if (Character.isLetter(getChar(index)) || getChar(index) == '_') {
                     String word = getWord();
                     if (reserved.getWordList().contains(word)) {
-                        tokenList.add(
-                                new Token("reserved", word, reserved.getWordList().indexOf(word), word.toUpperCase()));
+                        tokenList.add(new Token("reserved", word, reserved.getWordList().indexOf(word),
+                                word.toUpperCase(), lineNumber));
                     } else {
                         int tableIndex = variable.addWord(word);
-                        tokenList.add(new Token("variable", word, tableIndex, "IDENTIFIER"));
+                        tokenList.add(new Token("variable", word, tableIndex, "IDENTIFIER", lineNumber));
                     }
                 } else if (getChar(index) == '/' && index + 1 < content.length() && getChar(index + 1) == '*') {
                     String comment = getComment();
-                    tokenList.add(new Token("comment", comment, 0, "COMMENT"));
+                    tokenList.add(new Token("comment", comment, 0, "COMMENT", lineNumber));
                 } else {
                     if (punctuation.getWordList().contains("" + getChar(index))) {
                         if (!(getChar(index) == '=' && index + 1 < content.length() && getChar(index + 1) == '=')) {
                             tokenList.add(new Token("punctuation", "" + getChar(index),
                                     punctuation.getWordList().indexOf("" + getChar(index)),
                                     punctuationTokens.getWordList()
-                                            .get(punctuation.getWordList().indexOf(String.valueOf(getChar(index))))));
+                                            .get(punctuation.getWordList().indexOf(String.valueOf(getChar(index)))),
+                                    lineNumber));
                             index += 1;
                             continue;
                         }
@@ -67,8 +70,9 @@ public class Analyse {
                     if (!operator.equals("")) {
                         tokenList.add(new Token("operator", operator,
                                 operators.getWordList().indexOf(String.valueOf(operator)),
-                                operatorTokens.getWordList().get(
-                                        operators.getWordList().indexOf(String.valueOf(String.valueOf(operator))))));
+                                operatorTokens.getWordList()
+                                        .get(operators.getWordList().indexOf(String.valueOf(String.valueOf(operator)))),
+                                lineNumber));
                     }
                 }
             }

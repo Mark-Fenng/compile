@@ -5,12 +5,21 @@ public class Token {
     private String originWord;
     private int tableIndex;
     private String tokenValue;
+    private int lineNumber;
 
-    public Token(String type, String word, int index, String tokenValue) {
+    public Token(String type, String word, int index, String tokenValue, int lineNumber) {
         this.type = type;
         this.originWord = word;
         this.tableIndex = index;
         this.tokenValue = tokenValue;
+        this.lineNumber = lineNumber;
+    }
+
+    /**
+     * @return the lineNumber
+     */
+    public int getLineNumber() {
+        return lineNumber;
     }
 
     /**
