@@ -2,8 +2,8 @@ separator
 :
 grammar
 program:translation_unit
-primary_expression:IDENTIFIER
 primary_expression:CONSTANT
+primary_expression:IDENTIFIER
 primary_expression:L_PAREN expression R_PAREN
 
 postfix_expression:primary_expression
@@ -58,10 +58,8 @@ assignment_operator:OR_ASSIGN
 expression:assignment_expression
 expression:expression COMMA assignment_expression
 
-declaration:declaration_specifiers init_declarator_list SEMICOLON
-
-declaration_specifiers:VAR
-declaration_specifiers:VAL
+declaration:VAR init_declarator_list SEMICOLON
+declaration:VAL init_declarator_list SEMICOLON
 
 init_declarator_list:init_declarator
 init_declarator_list:init_declarator_list COMMA init_declarator
@@ -73,7 +71,8 @@ identifier_list:IDENTIFIER
 identifier_list:identifier_list COMMA IDENTIFIER
 
 initializer:assignment_expression
-initializer:L_CURLY initializer_list L_CURLY
+initializer:L_BRACK initializer_list R_BRACK
+initializer:L_BRACK initializer_list COMMA R_BRACK
 
 initializer_list:initializer
 initializer_list:initializer_list COMMA initializer
@@ -84,16 +83,13 @@ statement:selection_statement
 statement:iteration_statement
 statement:jump_statement
 
+statement_block:statement
+statement_block:declaration
+statement_block:statement_block statement
+statement_block:statement_block declaration
+
 compound_statement:L_CURLY R_CURLY
-compound_statement:L_CURLY statement_list R_CURLY
-compound_statement:L_CURLY declaration_list R_CURLY
-compound_statement:L_CURLY declaration_list statement_list R_CURLY
-
-declaration_list:declaration
-declaration_list:declaration_list declaration
-
-statement_list:statement
-statement_list:statement_list statement
+compound_statement:L_CURLY statement_block R_CURLY
 
 expression_statement:SEMICOLON
 expression_statement:expression SEMICOLON
@@ -106,9 +102,11 @@ selection_statement:IF L_PAREN expression R_PAREN compound_statement elif_statem
 selection_statement:IF L_PAREN expression R_PAREN compound_statement ELSE compound_statement
 selection_statement:IF L_PAREN expression R_PAREN compound_statement elif_statement ELSE compound_statement
 
-iteration_statement:WHILE L_PAREN expression R_PAREN statement
-iteration_statement:FOR L_PAREN expression_statement expression_statement R_PAREN statement
-iteration_statement:FOR L_PAREN expression_statement expression_statement expression R_PAREN statement
+iteration_statement:WHILE L_PAREN expression R_PAREN compound_statement
+iteration_statement:FOR L_PAREN declaration expression_statement R_PAREN compound_statement
+iteration_statement:FOR L_PAREN declaration expression_statement expression R_PAREN compound_statement
+iteration_statement:FOR L_PAREN expression_statement expression_statement R_PAREN compound_statement
+iteration_statement:FOR L_PAREN expression_statement expression_statement expression R_PAREN compound_statement
 
 jump_statement:CONTINUE SEMICOLON
 jump_statement:BREAK SEMICOLON
