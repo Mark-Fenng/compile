@@ -40,11 +40,15 @@ public class Analyse {
                     continue;
                 }
                 if (Character.isDigit(getChar(index)) || getChar(index) == '-') {
-                    String digit = getDigit();
-                    tokenList.add(new Token("number", digit, 0, "CONSTANT", lineNumber));
+                    List<Object> resultList = getDigit();
+                    String digit = (String) resultList.get(0);
+                    boolean isFloat = (boolean) resultList.get(1);
+                    tokenList.add(new Token(isFloat ? "float" : "integer", digit, 0, "CONSTANT", lineNumber));
                 } else if (Character.isLetter(getChar(index)) || getChar(index) == '_') {
                     String word = getWord();
-                    if (reserved.getWordList().contains(word)) {
+                    if (word.equals("true") || word.equals("false")) {
+                        tokenList.add(new Token("boolean", word, 0, "CONSTANT", lineNumber));
+                    } else if (reserved.getWordList().contains(word)) {
                         tokenList.add(new Token("reserved", word, reserved.getWordList().indexOf(word),
                                 word.toUpperCase(), lineNumber));
                     } else {
@@ -82,7 +86,7 @@ public class Analyse {
         }
     }
 
-    String getDigit() throws Exception {
+    List<Object> getDigit() throws Exception {
         String digit = "";
         boolean negativeFlag = getChar(index) == '-' ? true : false;
         boolean floatFlag = false;
@@ -100,7 +104,10 @@ public class Analyse {
             digit += getChar(index);
             index += 1;
         }
-        return digit;
+        List<Object> returnList = new ArrayList<>();
+        returnList.add(digit);
+        returnList.add(floatFlag);
+        return returnList;
     }
 
     String getWord() {

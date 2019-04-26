@@ -1,1 +1,3 @@
-val none_val;
+val none_val = false;
+val int1 = 3;
+val float1 = 3.5; 
