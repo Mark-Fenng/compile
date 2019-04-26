@@ -14,7 +14,7 @@ public class Analyse {
     private final List<Token> tokenList = new ArrayList<>();
     private final String content;
     private int index = 0;
-    private int lineNumber = 0;
+    private int lineNumber = 1;
 
     public Analyse(String content) {
 

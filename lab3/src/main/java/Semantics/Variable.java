@@ -1,20 +1,29 @@
 package Semantics;
 
 public class Variable {
+    private String symbol;
     private String type;
     private Object value;
     private int length;
     private int offset;
 
-    Variable(String type, Object value, int length, int offset) {
+    public Variable(String symbol, String type, Object value, int length, int offset) {
+        this.symbol = symbol;
         this.type = type;
         this.value = value;
         this.length = length;
         this.offset = offset;
     }
 
-    Variable() {
+    public Variable() {
 
+    }
+
+    /**
+     * @return the symbol
+     */
+    public String getSymbol() {
+        return symbol;
     }
 
     /**
@@ -71,5 +80,14 @@ public class Variable {
      */
     public void setValue(Object value) {
         this.value = value;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Variable) {
+            Variable objVariable = (Variable) obj;
+            return objVariable.getSymbol().equals(this.symbol);
+        }
+        return false;
     }
 }

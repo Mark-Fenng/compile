@@ -200,6 +200,7 @@ public class Gui extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(main_panel, "您什么都没有输入啊！", "提示", JOptionPane.ERROR_MESSAGE);
                 System.out.println("nothing input!");
             } else {
+                Semantics.clearAll();
                 // 词法分析
                 analyse = new Analyse(ta_input.getText());
                 analyse.parse();
@@ -209,10 +210,11 @@ public class Gui extends JFrame implements ActionListener {
                 try {
                     AST ast = new AST(analyse);
                     addSyntactic(ast.getProcessMessage(), tbmodel_grammar_process);
+                    ast.dfs(ast.getRoot());
                 } catch (Exception e1) {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
+                addSymbolTable(Semantics.getVariableTable(), tbmodel_symbol_list);
                 // 语义分析
                 /*
                  * SemanticAnalyse semanticanalyse = new SemanticAnalyse(ta_input.getText(),
@@ -286,13 +288,19 @@ public class Gui extends JFrame implements ActionListener {
 
     }
 
-    public void addToken(List<Token> tokens, DefaultTableModel tbmodel_lex_result) {
-        int index;
-        for (index = 0; index < tokens.size(); index++) {
+    public void addSymbolTable(List<Variable> variables, DefaultTableModel tbmodel_symbol_list) {
+        // "变量名称", "所属类型", "长度", "内存地址"
+        for (Variable v : variables) {
+            tbmodel_symbol_list.addRow(new String[] { v.getSymbol(), v.getType(), String.valueOf(v.getLength()),
+                    String.valueOf(v.getOffset()) });
+        }
+    }
 
+    public void addToken(List<Token> tokens, DefaultTableModel tbmodel_lex_result) {
+        for (Token token : tokens) {
             // "行号", "类型", "值", "符号表"
-            tbmodel_lex_result.addRow(new String[] { String.valueOf(index), tokens.get(index).getType(),
-                    tokens.get(index).getOriginWord(), String.valueOf(tokens.get(index).getTableIndex()) });
+            tbmodel_lex_result.addRow(new String[] { String.valueOf(token.getLineNumber()), token.getType(),
+                    token.getOriginWord(), String.valueOf(token.getTableIndex()) });
         }
     }
 
