@@ -24,9 +24,9 @@ public class Analyse {
         punctuationTokens.setWordList(Arrays.asList("ASSIGN", "SEMICOLON", "COMMA", "L_PAREN", "R_PAREN", "L_BRACK",
                 "R_BRACK", "L_CURLY", "R_CURLY"));
         operators.setWordList(
-                Arrays.asList("+", "*", "/", "!=", " !", "&", "|", "==", ">=", ">", "<=", "<", "&&", "||"));
-        operatorTokens.setWordList(Arrays.asList("ADD", "MUL", "DIV", "ENQ", "NOT", "AND", "OR", "EQ", "GE", "GT", "LE",
-                "LT", "DA", "DO"));
+                Arrays.asList("+", "-", "*", "/", "!=", " !", "&", "|", "==", ">=", ">", "<=", "<", "&&", "||"));
+        operatorTokens.setWordList(Arrays.asList("ADD", "SUB", "MUL", "DIV", "ENQ", "NOT", "AND", "OR", "EQ", "GE",
+                "GT", "LE", "LT", "DA", "DO"));
         this.content = content;
 
     }
@@ -39,7 +39,7 @@ public class Analyse {
                     lineNumber++;
                     continue;
                 }
-                if (Character.isDigit(getChar(index)) || getChar(index) == '-') {
+                if (Character.isDigit(getChar(index))) {
                     List<Object> resultList = getDigit();
                     String digit = (String) resultList.get(0);
                     boolean isFloat = (boolean) resultList.get(1);
@@ -88,12 +88,8 @@ public class Analyse {
 
     List<Object> getDigit() throws Exception {
         String digit = "";
-        boolean negativeFlag = getChar(index) == '-' ? true : false;
         boolean floatFlag = false;
         while (Character.isDigit(getChar(index)) || getChar(index) == '-' || getChar(index) == '.') {
-            if (getChar(index) == '-' && negativeFlag) {
-                throw new Exception("Wrong digit");
-            }
             if (getChar(index) == '.') {
                 if (floatFlag) {
                     throw new Exception("Wrong digit: " + digit + getChar(index));
@@ -135,6 +131,10 @@ public class Analyse {
         switch (getChar(index)) {
         case '+':
             operator += '+';
+            index += 1;
+            break;
+        case '-':
+            operator += '-';
             index += 1;
             break;
         case '*':

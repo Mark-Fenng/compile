@@ -9,6 +9,12 @@ import Semantics.Variable;
 public class AST {
     private Node root = null;
     List<String> processMessage = new ArrayList<>();
+    private static List<String> numType = new ArrayList<>();
+    static {
+        numType.add("boolean");
+        numType.add("integer");
+        numType.add("float");
+    }
 
     public AST(Analyse analyse) throws Exception {
         generateAST(analyse);
@@ -39,24 +45,29 @@ public class AST {
         }
         int index;
         Variable variable;
+        String type1, type2;
         switch (formulaIndex) {
         case 0:
             break;
         case 1: // primary_expression:CONSTANT
+            root.getChildren().get(0).setType(root.getChildren().get(0).getToken().getType());
             root.setType(root.getChildren().get(0).getToken().getType());
             break;
         case 2:
             variable = Semantics.getVariable(root.getChildren().get(0).getToken().getOriginWord());
             root.setType(variable.getType());
             break;
-        case 3:
+        case 3: // primary_expression:L_PAREN expression R_PAREN
+            root.setType(root.getChildren().get(1).getToken().getType());
             break;
         case 4: // postfix_expression:primary_expression
             root.setType(root.getChildren().get(0).getType());
             break;
-        case 5:
+        case 5: // postfix_expression:postfix_expression L_BRACK expression R_BRACK
+            root.setType(root.getChildren().get(0).getType());
             break;
-        case 6:
+        case 6: // postfix_expression:postfix_expression L_PAREN R_PAREN
+            root.setType(root.getChildren().get(0).getType());
             break;
         case 7:
             break;
@@ -64,57 +75,196 @@ public class AST {
             root.setType(root.getChildren().get(0).getType());
             break;
         case 9: // unary_expression:NOT postfix_expression
+            if (!root.getChildren().get(1).getType().equals("boolean")) {
+                System.out.println("Not operator can't be used to other type Line:"
+                        + root.getChildren().get(0).getToken().getLineNumber());
+            } else {
+                root.setType("boolean");
+            }
             break;
         case 10: // unary_expression:SUB postfix_expression
+            if (!root.getChildren().get(1).getType().equals("integer")
+                    && !root.getChildren().get(1).getType().equals("float")) {
+                System.out.println("Sub operator can't be used to other type Line:"
+                        + root.getChildren().get(0).getToken().getLineNumber());
+            } else {
+                root.setType(root.getChildren().get(1).getType());
+            }
             break;
         case 11: // multiplicative_expression:unary_expression
             root.setType(root.getChildren().get(0).getType());
             break;
-        case 12:
+        case 12: // multiplicative_expression:multiplicative_expression MUL postfix_expression
+            type1 = root.getChildren().get(0).getType();
+            type2 = root.getChildren().get(2).getType();
+            if ((!type1.equals("integer") && !type1.equals("float"))
+                    || (!type2.equals("integer") && !type2.equals("float"))) {
+                System.out.println("Multiply operator can't be used to other type Line:"
+                        + root.getChildren().get(1).getToken().getLineNumber());
+            } else {
+                root.setType(type1.equals(type2) ? type1 : "float");
+            }
             break;
-        case 13:
+        case 13: // multiplicative_expression:multiplicative_expression DIV postfix_expression
+            type1 = root.getChildren().get(0).getType();
+            type2 = root.getChildren().get(2).getType();
+            if ((!type1.equals("integer") && !type1.equals("float"))
+                    || (!type2.equals("integer") && !type2.equals("float"))) {
+                System.out.println("Division operator can't be used to other type Line:"
+                        + root.getChildren().get(1).getToken().getLineNumber());
+            } else {
+                root.setType(type1.equals(type2) ? type1 : "float");
+            }
             break;
-        case 14:
+        case 14: // multiplicative_expression:multiplicative_expression MOD postfix_expression
+            type1 = root.getChildren().get(0).getType();
+            type2 = root.getChildren().get(2).getType();
+            if (!type1.equals("integer") && !type2.equals("integer")) {
+                System.out.println("Modulo operator can't be used to other type Line:"
+                        + root.getChildren().get(1).getToken().getLineNumber());
+            } else {
+                root.setType(type1.equals(type2) ? type1 : "float");
+            }
             break;
         case 15: // additive_expression:multiplicative_expression
             root.setType(root.getChildren().get(0).getType());
             break;
-        case 16:
+        case 16: // additive_expression:additive_expression ADD multiplicative_expression
+            type1 = root.getChildren().get(0).getType();
+            type2 = root.getChildren().get(2).getType();
+            if ((!type1.equals("integer") && !type1.equals("float"))
+                    || (!type2.equals("integer") && !type2.equals("float"))) {
+                System.out.println("Add operator can't be used to other type Line:"
+                        + root.getChildren().get(1).getToken().getLineNumber());
+            } else {
+                root.setType(type1.equals(type2) ? type1 : "float");
+            }
             break;
-        case 17:
+        case 17: // additive_expression:additive_expression SUB multiplicative_expression
+            type1 = root.getChildren().get(0).getType();
+            type2 = root.getChildren().get(2).getType();
+            if ((!type1.equals("integer") && !type1.equals("float"))
+                    || (!type2.equals("integer") && !type2.equals("float"))) {
+                System.out.println("Sub operator can't be used to other type Line:"
+                        + root.getChildren().get(1).getToken().getLineNumber());
+            } else {
+                root.setType(type1.equals(type2) ? type1 : "float");
+            }
             break;
         case 18: // relational_expression:additive_expression
             root.setType(root.getChildren().get(0).getType());
             break;
-        case 19:
+        case 19: // relational_expression:relational_expression LT additive_expression
+            type1 = root.getChildren().get(0).getType();
+            type2 = root.getChildren().get(2).getType();
+            if ((!type1.equals("integer") && !type1.equals("float"))
+                    || (!type2.equals("integer") && !type2.equals("float"))) {
+                System.out.println("< operator can't be used to other type Line:"
+                        + root.getChildren().get(1).getToken().getLineNumber());
+            } else {
+                root.setType("boolean");
+            }
             break;
-        case 20:
+        case 20: // relational_expression:relational_expression GT additive_expression
+            type1 = root.getChildren().get(0).getType();
+            type2 = root.getChildren().get(2).getType();
+            if ((!type1.equals("integer") && !type1.equals("float"))
+                    || (!type2.equals("integer") && !type2.equals("float"))) {
+                System.out.println("> operator can't be used to other type Line:"
+                        + root.getChildren().get(1).getToken().getLineNumber());
+            } else {
+                root.setType("boolean");
+            }
             break;
-        case 21:
+        case 21: // relational_expression:relational_expression LE additive_expression
+            type1 = root.getChildren().get(0).getType();
+            type2 = root.getChildren().get(2).getType();
+            if ((!type1.equals("integer") && !type1.equals("float"))
+                    || (!type2.equals("integer") && !type2.equals("float"))) {
+                System.out.println("<= operator can't be used to other type Line:"
+                        + root.getChildren().get(1).getToken().getLineNumber());
+            } else {
+                root.setType("boolean");
+            }
             break;
-        case 22:
+        case 22: // relational_expression:relational_expression GE additive_expression
+            type1 = root.getChildren().get(0).getType();
+            type2 = root.getChildren().get(2).getType();
+            if ((!type1.equals("integer") && !type1.equals("float"))
+                    || (!type2.equals("integer") && !type2.equals("float"))) {
+                System.out.println(">= operator can't be used to other type Line:"
+                        + root.getChildren().get(1).getToken().getLineNumber());
+            } else {
+                root.setType("boolean");
+            }
             break;
         case 23: // equality_expression:relational_expression
             root.setType(root.getChildren().get(0).getType());
             break;
-        case 24:
+        case 24: // equality_expression:equality_expression EQ relational_expression
+            type1 = root.getChildren().get(0).getType();
+            type2 = root.getChildren().get(2).getType();
+            if ((!type1.equals("integer") && !type1.equals("float"))
+                    || (!type2.equals("integer") && !type2.equals("float"))) {
+                System.out.println("== operator can't be used to other type Line:"
+                        + root.getChildren().get(1).getToken().getLineNumber());
+            } else {
+                root.setType("boolean");
+            }
             break;
-        case 25:
+        case 25: // equality_expression:equality_expression NEQ relational_expression
+            type1 = root.getChildren().get(0).getType();
+            type2 = root.getChildren().get(2).getType();
+            if ((!type1.equals("integer") && !type1.equals("float"))
+                    || (!type2.equals("integer") && !type2.equals("float"))) {
+                System.out.println("!= operator can't be used to other type Line:"
+                        + root.getChildren().get(1).getToken().getLineNumber());
+            } else {
+                root.setType("boolean");
+            }
             break;
         case 26: // logical_and_expression:equality_expression
             root.setType(root.getChildren().get(0).getType());
             break;
-        case 27:
+        case 27: // logical_and_expression:logical_and_expression AND equality_expression
+            type1 = root.getChildren().get(0).getType();
+            type2 = root.getChildren().get(2).getType();
+            if ((!type1.equals("integer") && !type1.equals("float"))
+                    || (!type2.equals("integer") && !type2.equals("float"))) {
+                System.out.println("And operator can't be used to other type Line:"
+                        + root.getChildren().get(1).getToken().getLineNumber());
+            } else {
+                root.setType("boolean");
+            }
             break;
         case 28: // logical_or_expression:logical_and_expression
             root.setType(root.getChildren().get(0).getType());
             break;
-        case 29:
+        case 29: // logical_or_expression:logical_or_expression OR logical_and_expression
+            type1 = root.getChildren().get(0).getType();
+            type2 = root.getChildren().get(2).getType();
+            if ((!type1.equals("integer") && !type1.equals("float"))
+                    || (!type2.equals("integer") && !type2.equals("float"))) {
+                System.out.println("Or operator can't be used to other type Line:"
+                        + root.getChildren().get(1).getToken().getLineNumber());
+            } else {
+                root.setType("boolean");
+            }
             break;
         case 30: // assignment_expression:logical_or_expression
             root.setType(root.getChildren().get(0).getType());
             break;
-        case 31:
+        case 31: // assignment_expression:postfix_expression assignment_operator
+                 // assignment_expression
+            type1 = root.getChildren().get(0).getType();
+            type2 = root.getChildren().get(2).getType();
+            if (!numType.contains(type1) && !numType.contains(type2)) {
+                System.out.println("Assign operator can't be used to other type Line:"
+                        + root.getChildren().get(1).getToken().getLineNumber());
+            } else {
+                root.getChildren().get(0).setType(root.getChildren().get(2).getType());
+                root.setType(root.getChildren().get(0).getType());
+            }
             break;
         case 32: // argument_expression_list:assignment_expression
             root.setType(root.getChildren().get(0).getType());
@@ -171,7 +321,7 @@ public class AST {
             variable.setOffset(index * 4);
             break;
         case 50: // identifier_list:IDENTIFIER
-            
+
             break;
         case 51:
             break;
