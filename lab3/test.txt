@@ -1,3 +1,2 @@
-val none_val = false;
-val int1 = 3;
-val float1 = 3.5; 
+val bool1 = false,int1 = 3,float1 = 3.5;
+val num;

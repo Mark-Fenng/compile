@@ -22,7 +22,7 @@ public class Semantics {
         }
     }
 
-    public Variable getVariable(String variable) {
+    public static Variable getVariable(String variable) {
         for (Variable v : variableTable) {
             if (v.getSymbol().equals(variable)) {
                 return v;

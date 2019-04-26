@@ -6,6 +6,8 @@ import Lexer.*;
 public class Node {
     private List<Node> children = new LinkedList<>();
     private Token token;
+    private String type;
+    private Object value;
     private Node parent = null;
 
     public Node(Token token) {
@@ -59,6 +61,34 @@ public class Node {
 
     public boolean hasChildren() {
         return this.children.size() != 0;
+    }
+
+    /**
+     * @return the type
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * @param type the type to set
+     */
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    /**
+     * @return the value
+     */
+    public Object getValue() {
+        return value;
+    }
+
+    /**
+     * @param value the value to set
+     */
+    public void setValue(Object value) {
+        this.value = value;
     }
 
     @Override

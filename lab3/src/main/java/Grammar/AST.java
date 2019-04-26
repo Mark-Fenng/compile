@@ -37,16 +37,22 @@ public class AST {
         for (Node node : root.getChildren()) {
             dfs(node);
         }
+        int index;
+        Variable variable;
         switch (formulaIndex) {
         case 0:
             break;
-        case 1:
+        case 1: // primary_expression:CONSTANT
+            root.setType(root.getChildren().get(0).getToken().getType());
             break;
         case 2:
+            variable = Semantics.getVariable(root.getChildren().get(0).getToken().getOriginWord());
+            root.setType(variable.getType());
             break;
         case 3:
             break;
-        case 4:
+        case 4: // postfix_expression:primary_expression
+            root.setType(root.getChildren().get(0).getType());
             break;
         case 5:
             break;
@@ -54,13 +60,15 @@ public class AST {
             break;
         case 7:
             break;
-        case 8:
+        case 8: // unary_expression:postfix_expression
+            root.setType(root.getChildren().get(0).getType());
             break;
-        case 9:
+        case 9: // unary_expression:NOT postfix_expression
             break;
-        case 10:
+        case 10: // unary_expression:SUB postfix_expression
             break;
-        case 11:
+        case 11: // multiplicative_expression:unary_expression
+            root.setType(root.getChildren().get(0).getType());
             break;
         case 12:
             break;
@@ -68,13 +76,15 @@ public class AST {
             break;
         case 14:
             break;
-        case 15:
+        case 15: // additive_expression:multiplicative_expression
+            root.setType(root.getChildren().get(0).getType());
             break;
         case 16:
             break;
         case 17:
             break;
-        case 18:
+        case 18: // relational_expression:additive_expression
+            root.setType(root.getChildren().get(0).getType());
             break;
         case 19:
             break;
@@ -84,29 +94,35 @@ public class AST {
             break;
         case 22:
             break;
-        case 23:
+        case 23: // equality_expression:relational_expression
+            root.setType(root.getChildren().get(0).getType());
             break;
         case 24:
             break;
         case 25:
             break;
-        case 26:
+        case 26: // logical_and_expression:equality_expression
+            root.setType(root.getChildren().get(0).getType());
             break;
         case 27:
             break;
-        case 28:
+        case 28: // logical_or_expression:logical_and_expression
+            root.setType(root.getChildren().get(0).getType());
             break;
         case 29:
             break;
-        case 30:
+        case 30: // assignment_expression:logical_or_expression
+            root.setType(root.getChildren().get(0).getType());
             break;
         case 31:
             break;
-        case 32:
+        case 32: // argument_expression_list:assignment_expression
+            root.setType(root.getChildren().get(0).getType());
             break;
         case 33:
             break;
-        case 34:
+        case 34: // argument_expression_list:assignment_expression
+            root.setType(root.getChildren().get(0).getType());
             break;
         case 35:
             break;
@@ -136,21 +152,31 @@ public class AST {
         case 47:
             break;
         case 48: // init_declarator:IDENTIFIER
-            Variable variable = new Variable(root.getChildren().get(0).getToken().getOriginWord(), "", null, 4, 0);
-            int index = Semantics.addVariable(variable);
+            variable = new Variable(root.getChildren().get(0).getToken().getOriginWord(), "", null, 4, 0);
+            index = Semantics.addVariable(variable);
             if (index == -1) {
                 System.out.println("Variable has been declared before Line:"
                         + root.getChildren().get(0).getToken().getLineNumber());
             }
             variable.setOffset(index * 4);
             break;
-        case 49:
+        case 49: // init_declarator:IDENTIFIER ASSIGN initializer
+            variable = new Variable(root.getChildren().get(0).getToken().getOriginWord(),
+                    root.getChildren().get(2).getType(), root.getChildren().get(2).getToken().getOriginWord(), 4, 0);
+            index = Semantics.addVariable(variable);
+            if (index == -1) {
+                System.out.println("Variable has been declared before Line:"
+                        + root.getChildren().get(0).getToken().getLineNumber());
+            }
+            variable.setOffset(index * 4);
             break;
-        case 50:
+        case 50: // identifier_list:IDENTIFIER
+            
             break;
         case 51:
             break;
-        case 52:
+        case 52: // initializer:assignment_expression
+            root.setType(root.getChildren().get(0).getType());
             break;
         case 53:
             break;
