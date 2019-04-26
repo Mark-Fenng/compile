@@ -71,6 +71,7 @@ identifier_list:IDENTIFIER
 identifier_list:identifier_list COMMA IDENTIFIER
 
 initializer:assignment_expression
+initializer:L_BRACK R_BRACK
 initializer:L_BRACK initializer_list R_BRACK
 initializer:L_BRACK initializer_list COMMA R_BRACK
 
