@@ -7,7 +7,6 @@ import Grammar.*;
 public class Semantics {
     private static List<String> errorMessage = new ArrayList<>();
     private static List<Variable> variableTable = new ArrayList<>();
-    private static List<Triad> triadTable = new ArrayList<>();
     private static List<Quad> quadTable = new ArrayList<>();
 
     public void action(Formula formula, List<Token> tokenList) {

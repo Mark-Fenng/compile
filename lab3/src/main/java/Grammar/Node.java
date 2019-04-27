@@ -6,7 +6,7 @@ import Lexer.*;
 public class Node {
     private List<Node> children = new LinkedList<>();
     private Token token;
-    private String type;
+    private Map<String, Object> attributes = new HashMap<>();
     private Object value;
     private Node parent = null;
 
@@ -67,14 +67,8 @@ public class Node {
      * @return the type
      */
     public String getType() {
-        return type;
-    }
 
-    /**
-     * @param type the type to set
-     */
-    public void setType(String type) {
-        this.type = type;
+        return (String) this.attributes.get("type");
     }
 
     /**
@@ -89,6 +83,13 @@ public class Node {
      */
     public void setValue(Object value) {
         this.value = value;
+    }
+
+    /**
+     * @return the attributes
+     */
+    public Map<String, Object> getAttributes() {
+        return attributes;
     }
 
     @Override

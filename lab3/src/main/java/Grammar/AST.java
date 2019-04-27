@@ -56,7 +56,7 @@ public class AST {
             }
             break;
         case 2: // primary_expression:IDENTIFIER
-            root.getChildren().get(0).setType(root.getType());
+            root.getChildren().get(0).getAttributes().put("type", root.getType());
             variable = Semantics.getVariable(root.getChildren().get(0).getToken().getOriginWord());
             if (variable != null) {
                 variable.setType(root.getType());
@@ -65,7 +65,7 @@ public class AST {
         case 3: // primary_expression:L_PAREN expression R_PAREN
             break;
         case 4: // postfix_expression:primary_expression
-            root.getChildren().get(0).setType(root.getType());
+            root.getChildren().get(0).getAttributes().put("type", root.getType());
             break;
         case 5: // postfix_expression:postfix_expression L_BRACK expression R_BRACK
             break;
@@ -336,8 +336,9 @@ public class AST {
                     case 0:
                         break;
                     case 1: // primary_expression:CONSTANT
-                        root.getChildren().get(0).setType(root.getChildren().get(0).getToken().getType());
-                        root.setType(root.getChildren().get(0).getToken().getType());
+                        root.getChildren().get(0).getAttributes().put("type",
+                                root.getChildren().get(0).getToken().getType());
+                        root.getAttributes().put("type", root.getChildren().get(0).getToken().getType());
                         break;
                     case 2: // primary_expression:IDENTIFIER
                         variable = Semantics.getVariable(root.getChildren().get(0).getToken().getOriginWord());
@@ -346,25 +347,25 @@ public class AST {
                                     + root.getChildren().get(0).getToken().getLineNumber() + " [The variable "
                                     + root.getChildren().get(0).getToken().getOriginWord() + " has not been declared]");
                         } else {
-                            root.setType(variable.getType());
+                            root.getAttributes().put("type", variable.getType());
                         }
                         break;
                     case 3: // primary_expression:L_PAREN expression R_PAREN
-                        root.setType(root.getChildren().get(1).getToken().getType());
+                        root.getAttributes().putAll(root.getChildren().get(1).getAttributes());
                         break;
                     case 4: // postfix_expression:primary_expression
-                        root.setType(root.getChildren().get(0).getType());
+                        root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
                     case 5: // postfix_expression:postfix_expression L_BRACK expression R_BRACK
-                        root.setType(root.getChildren().get(0).getType());
+                        root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
                     case 6: // postfix_expression:postfix_expression L_PAREN R_PAREN
-                        root.setType(root.getChildren().get(0).getType());
+                        root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
                     case 7:
                         break;
                     case 8: // unary_expression:postfix_expression
-                        root.setType(root.getChildren().get(0).getType());
+                        root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
                     case 9: // unary_expression:NOT postfix_expression
                         if (!root.getChildren().get(1).getType().equals("boolean")) {
@@ -372,7 +373,7 @@ public class AST {
                                     "Error at Line: " + root.getChildren().get(0).getToken().getLineNumber()
                                             + " [Not operator can't be used to other type]");
                         } else {
-                            root.setType("boolean");
+                            root.getAttributes().put("type", "boolean");
                         }
                         break;
                     case 10: // unary_expression:SUB postfix_expression
@@ -382,11 +383,11 @@ public class AST {
                                     "Error at Line: " + root.getChildren().get(0).getToken().getLineNumber()
                                             + " [Sub operator can't be used to other type]");
                         } else {
-                            root.setType(root.getChildren().get(1).getType());
+                            root.getAttributes().put("type", root.getChildren().get(1).getAttributes().get("type"));
                         }
                         break;
                     case 11: // multiplicative_expression:unary_expression
-                        root.setType(root.getChildren().get(0).getType());
+                        root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
                     case 12: // multiplicative_expression:multiplicative_expression MUL postfix_expression
                         type1 = root.getChildren().get(0).getType();
@@ -397,7 +398,7 @@ public class AST {
                                     "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
                                             + " [Multiply operator can't be used to other type]");
                         } else {
-                            root.setType(type1.equals(type2) ? type1 : "float");
+                            root.getAttributes().put("type", type1.equals(type2) ? type1 : "float");
                         }
                         break;
                     case 13: // multiplicative_expression:multiplicative_expression DIV postfix_expression
@@ -409,7 +410,7 @@ public class AST {
                                     "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
                                             + " [Division operator can't be used to other type]");
                         } else {
-                            root.setType(type1.equals(type2) ? type1 : "float");
+                            root.getAttributes().put("type", type1.equals(type2) ? type1 : "float");
                         }
                         break;
                     case 14: // multiplicative_expression:multiplicative_expression MOD postfix_expression
@@ -420,11 +421,11 @@ public class AST {
                                     "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
                                             + " [Modulo operator can't be used to other type]");
                         } else {
-                            root.setType(type1.equals(type2) ? type1 : "float");
+                            root.getAttributes().put("type", type1.equals(type2) ? type1 : "float");
                         }
                         break;
                     case 15: // additive_expression:multiplicative_expression
-                        root.setType(root.getChildren().get(0).getType());
+                        root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
                     case 16: // additive_expression:additive_expression ADD multiplicative_expression
                         type1 = root.getChildren().get(0).getType();
@@ -435,7 +436,7 @@ public class AST {
                                     "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
                                             + " [Add operator can't be used to other type]");
                         } else {
-                            root.setType(type1.equals(type2) ? type1 : "float");
+                            root.getAttributes().put("type", type1.equals(type2) ? type1 : "float");
                         }
                         break;
                     case 17: // additive_expression:additive_expression SUB multiplicative_expression
@@ -447,11 +448,11 @@ public class AST {
                                     "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
                                             + " [Sub operator can't be used to other type]");
                         } else {
-                            root.setType(type1.equals(type2) ? type1 : "float");
+                            root.getAttributes().put("type", type1.equals(type2) ? type1 : "float");
                         }
                         break;
                     case 18: // relational_expression:additive_expression
-                        root.setType(root.getChildren().get(0).getType());
+                        root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
                     case 19: // relational_expression:relational_expression LT additive_expression
                         type1 = root.getChildren().get(0).getType();
@@ -462,7 +463,7 @@ public class AST {
                                     "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
                                             + " [< operator can't be used to other type]");
                         } else {
-                            root.setType("boolean");
+                            root.getAttributes().put("type", "boolean");
                         }
                         break;
                     case 20: // relational_expression:relational_expression GT additive_expression
@@ -474,7 +475,7 @@ public class AST {
                                     "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
                                             + " [> operator can't be used to other type]");
                         } else {
-                            root.setType("boolean");
+                            root.getAttributes().put("type", "boolean");
                         }
                         break;
                     case 21: // relational_expression:relational_expression LE additive_expression
@@ -486,7 +487,7 @@ public class AST {
                                     "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
                                             + " [<= operator can't be used to other type]");
                         } else {
-                            root.setType("boolean");
+                            root.getAttributes().put("type", "boolean");
                         }
                         break;
                     case 22: // relational_expression:relational_expression GE additive_expression
@@ -498,11 +499,11 @@ public class AST {
                                     "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
                                             + " [>= operator can't be used to other type]");
                         } else {
-                            root.setType("boolean");
+                            root.getAttributes().put("type", "boolean");
                         }
                         break;
                     case 23: // equality_expression:relational_expression
-                        root.setType(root.getChildren().get(0).getType());
+                        root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
                     case 24: // equality_expression:equality_expression EQ relational_expression
                         type1 = root.getChildren().get(0).getType();
@@ -513,7 +514,7 @@ public class AST {
                                     "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
                                             + " [== operator can't be used to other type]");
                         } else {
-                            root.setType("boolean");
+                            root.getAttributes().put("type", "boolean");
                         }
                         break;
                     case 25: // equality_expression:equality_expression NEQ relational_expression
@@ -525,11 +526,11 @@ public class AST {
                                     "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
                                             + " [!= operator can't be used to other type]");
                         } else {
-                            root.setType("boolean");
+                            root.getAttributes().put("type", "boolean");
                         }
                         break;
                     case 26: // logical_and_expression:equality_expression
-                        root.setType(root.getChildren().get(0).getType());
+                        root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
                     case 27: // logical_and_expression:logical_and_expression AND equality_expression
                         type1 = root.getChildren().get(0).getType();
@@ -540,11 +541,11 @@ public class AST {
                                     "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
                                             + " [And operator can't be used to other type]");
                         } else {
-                            root.setType("boolean");
+                            root.getAttributes().put("type", "boolean");
                         }
                         break;
                     case 28: // logical_or_expression:logical_and_expression
-                        root.setType(root.getChildren().get(0).getType());
+                        root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
                     case 29: // logical_or_expression:logical_or_expression OR logical_and_expression
                         type1 = root.getChildren().get(0).getType();
@@ -555,11 +556,11 @@ public class AST {
                                     "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
                                             + " [Or operator can't be used to other type]");
                         } else {
-                            root.setType("boolean");
+                            root.getAttributes().put("type", "boolean");
                         }
                         break;
                     case 30: // assignment_expression:logical_or_expression
-                        root.setType(root.getChildren().get(0).getType());
+                        root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
                     case 31: // assignment_expression:postfix_expression assignment_operator
                              // assignment_expression
@@ -570,17 +571,17 @@ public class AST {
                                     "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
                                             + " [Assign operator can't be used to other type]");
                         } else {
-                            root.getChildren().get(0).setType(root.getChildren().get(2).getType());
-                            root.setType(root.getChildren().get(0).getType());
+                            root.getChildren().get(0).getAttributes().put("type", root.getChildren().get(2).getType());
+                            root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         }
                         break;
                     case 32: // argument_expression_list:assignment_expression
-                        root.setType(root.getChildren().get(0).getType());
+                        root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
                     case 33:
                         break;
                     case 34: // argument_expression_list:assignment_expression
-                        root.setType(root.getChildren().get(0).getType());
+                        root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
                     case 35:
                         break;
@@ -638,7 +639,7 @@ public class AST {
                     case 51:
                         break;
                     case 52: // initializer:assignment_expression
-                        root.setType(root.getChildren().get(0).getType());
+                        root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
                     case 53:
                         break;
