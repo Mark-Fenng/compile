@@ -50,24 +50,12 @@ public class AST {
         case 0:
             break;
         case 1: // primary_expression:CONSTANT
-            type1 = root.getType();
-            type2 = root.getChildren().get(0).getToken().getType();
-            if (!type1.equals(type2)) {
-                Semantics.addErrorMessage("Error at Line: " + root.getChildren().get(0).getToken().getLineNumber()
-                        + " [Can't assign value to constant]");
-            }
             break;
         case 2: // primary_expression:IDENTIFIER
-            root.getChildren().get(0).getAttributes().put("type", root.getType());
-            variable = Semantics.getVariable(root.getChildren().get(0).getToken().getOriginWord());
-            if (variable != null) {
-                variable.setType(root.getType());
-            }
             break;
         case 3: // primary_expression:L_PAREN expression R_PAREN
             break;
         case 4: // postfix_expression:primary_expression
-            root.getChildren().get(0).getAttributes().put("type", root.getType());
             break;
         case 5: // postfix_expression:postfix_expression L_BRACK expression R_BRACK
             break;
@@ -750,15 +738,30 @@ public class AST {
                     case 31: // assignment_expression:postfix_expression assignment_operator
                              // assignment_expression
                         operator = "=";
-                        type1 = root.getChildren().get(0).getType();
                         type2 = root.getChildren().get(2).getType();
-                        if (!numType.contains(type1) && !numType.contains(type2)) {
+                        if (!numType.contains(type2)) {
                             Semantics.addErrorMessage(
-                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber() + " ["
+                                    "Error at Line: " + root.getChildren().get(0).getSymbol().getLineNumber() + " ["
                                             + operator + " operator can't be used to other type]");
                         } else {
-                            root.getChildren().get(0).getAttributes().put("type", root.getChildren().get(2).getType());
-                            root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
+                            if (root.getChildren().get(0).getSymbol() != null) {
+                                if (root.getChildren().get(0).getTable() == null) {
+                                    Semantics.addErrorMessage(
+                                            "Error at Line: " + root.getChildren().get(0).getSymbol().getLineNumber()
+                                                    + " [Can't assign value to constant]");
+                                } else {
+                                    variable = Semantics
+                                            .getVariable(root.getChildren().get(0).getSymbol().getOriginWord());
+                                    if (variable != null) {
+                                        variable.setType(type2);
+                                    }
+                                    root.getChildren().get(0).getAttributes().put("type",
+                                            root.getChildren().get(2).getType());
+                                    // generate code
+                                    quad = new Quad(operator, root.getChildren().get(2).getSymbol(), null,
+                                            root.getChildren().get(2).getSymbol());
+                                }
+                            }
                         }
                         break;
                     case 32: // argument_expression_list:assignment_expression
@@ -820,7 +823,7 @@ public class AST {
                         variable.setOffset(index * 4);
                         break;
                     case 50: // identifier_list:IDENTIFIER
-
+                        root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
                     case 51:
                         break;
