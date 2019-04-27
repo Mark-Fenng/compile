@@ -2,6 +2,7 @@ package Grammar;
 
 import java.util.*;
 import Lexer.*;
+import Semantics.*;
 
 public class Node {
     private List<Node> children = new LinkedList<>();
@@ -84,6 +85,10 @@ public class Node {
      */
     public Object getValue() {
         return value;
+    }
+
+    public List<Quad> getCodes() {
+        return (List<Quad>) this.attributes.get("codes");
     }
 
     /**

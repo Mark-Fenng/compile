@@ -13,4 +13,35 @@ public class Quad {
         this.result = result;
     }
 
+    @Override
+    public String toString() {
+
+        switch (operator) {
+        case "+":
+        case "*":
+        case "/":
+        case "%":
+        case "&":
+        case "|":
+        case "==":
+        case "!=":
+        case "!":
+        case ">":
+        case "<":
+        case "<=":
+        case ">=":
+            return result.getOriginWord() + "=" + v1.getOriginWord() + operator + v2.getOriginWord();
+        case "-":
+            if (v2 == null) {
+                return result.getOriginWord() + "=0-" + v1.getOriginWord();
+            } else {
+                return result.getOriginWord() + "=" + v1.getOriginWord() + operator + v2.getOriginWord();
+            }
+        case "=":
+            return result.getOriginWord() + "=" + v1.getOriginWord();
+        default:
+            return "";
+        }
+    }
+
 }

@@ -1,6 +1,7 @@
 val bool1 = false,int1 = 3,float1 = 3.5;
 val num;
 num=true;
+num=int1+float1;
 
 
 val bool1 = false,int1 = 3,float1 = 3.5;

@@ -71,7 +71,7 @@ public class Gui extends JFrame implements ActionListener {
     private DefaultTableModel tbmodel_triples;
     private JScrollPane scrollpane_triples;
 
-    // 输出四地址指令
+    // 输出错误信息
     private JTable tb_error;
     private DefaultTableModel tbmodel_error;
     private JScrollPane scrollpane_error;
@@ -212,11 +212,14 @@ public class Gui extends JFrame implements ActionListener {
                     AST ast = new AST(analyse);
                     addSyntactic(ast.getProcessMessage(), tbmodel_grammar_process);
                     ast.dfs(ast.getRoot());
+                    addSymbolTable(Semantics.getVariableTable(), tbmodel_symbol_list);
+                    addErrorTable(Semantics.getErrorMessage(), tbmodel_error);
+                    // addTriple(Semantics.getQuadTable(), tbmodel_triples);
+                    if (ast.getRoot().getCodes() != null)
+                        addTriple(ast.getRoot().getCodes(), tbmodel_triples);
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
-                addSymbolTable(Semantics.getVariableTable(), tbmodel_symbol_list);
-                addErrorTable(Semantics.getErrorMessage(), tbmodel_error);
                 // 语义分析
                 /*
                  * SemanticAnalyse semanticanalyse = new SemanticAnalyse(ta_input.getText(),
@@ -322,6 +325,14 @@ public class Gui extends JFrame implements ActionListener {
         for (String error : errorMessages) {
             tbmodel.addRow(new String[] { error });
         }
+    }
+
+    public void addTriple(List<Quad> quads, DefaultTableModel tbmodel_triples) {
+        int index = 0;
+        for (index = 0; index < quads.size(); index++) {
+            tbmodel_triples.addRow(new String[] { String.valueOf(index), quads.get(index).toString() });
+        }
+
     }
 
 }

@@ -40,7 +40,7 @@ public class AST {
 
     public void dfs(Node root) {
         int formulaIndex = -1;
-        if (root.hasChildren()) {
+        if (root != null && root.hasChildren()) {
             formulaIndex = LR1.grammars.indexOf(getFormula(root, root.getChildren()));
         }
         int index;
@@ -370,7 +370,7 @@ public class AST {
                                             + " [Not operator can't be used to other type]");
                         } else {
                             root.getAttributes().put("type", "boolean");
-                            index = Semantics.getTempVariableTable().size() - 1;
+                            index = Semantics.getTempVariableTable().size();
                             // generate temp variable
                             variable = new Variable(this.tempSymbol + index, "boolean", null, 4, 4 * index);
                             Semantics.addTempVariable(variable);
@@ -380,6 +380,8 @@ public class AST {
                             root.getAttributes().put("symbol", tempToken);
                             // generate code
                             quad = new Quad("!", root.getChildren().get(1).getSymbol(), null, tempToken);
+                            root.getAttributes().put("codes", new ArrayList<Quad>());
+                            root.getCodes().add(quad);
                         }
                         break;
                     case 10: // unary_expression:SUB postfix_expression
@@ -390,7 +392,7 @@ public class AST {
                                             + " [Sub operator can't be used to other type]");
                         } else {
                             root.getAttributes().put("type", root.getChildren().get(1).getType());
-                            index = Semantics.getTempVariableTable().size() - 1;
+                            index = Semantics.getTempVariableTable().size();
                             // generate temp variable
                             variable = new Variable(this.tempSymbol + index, root.getChildren().get(1).getType(), null,
                                     4, 4 * index);
@@ -401,6 +403,8 @@ public class AST {
                             root.getAttributes().put("symbol", tempToken);
                             // generate code
                             quad = new Quad("-", root.getChildren().get(1).getSymbol(), null, tempToken);
+                            root.getAttributes().put("codes", new ArrayList<Quad>());
+                            root.getCodes().add(quad);
                         }
                         break;
                     case 11: // multiplicative_expression:unary_expression
@@ -416,7 +420,7 @@ public class AST {
                                             + " [Multiply operator can't be used to other type]");
                         } else {
                             root.getAttributes().put("type", type1.equals(type2) ? type1 : "float");
-                            index = Semantics.getTempVariableTable().size() - 1;
+                            index = Semantics.getTempVariableTable().size();
                             // generate temp variable
                             variable = new Variable(this.tempSymbol + index, type1.equals(type2) ? type1 : "float",
                                     null, 4, 4 * index);
@@ -428,6 +432,12 @@ public class AST {
                             // generate code
                             quad = new Quad("*", root.getChildren().get(0).getSymbol(),
                                     root.getChildren().get(2).getSymbol(), tempToken);
+                            root.getAttributes().put("codes", new ArrayList<Quad>());
+                            if (root.getChildren().get(0).getCodes() != null)
+                                root.getCodes().addAll(root.getChildren().get(0).getCodes());
+                            if (root.getChildren().get(2).getCodes() != null)
+                                root.getCodes().addAll(root.getChildren().get(2).getCodes());
+                            root.getCodes().add(quad);
                         }
                         break;
                     case 13: // multiplicative_expression:multiplicative_expression DIV postfix_expression
@@ -440,7 +450,7 @@ public class AST {
                                             + " [Division operator can't be used to other type]");
                         } else {
                             root.getAttributes().put("type", type1.equals(type2) ? type1 : "float");
-                            index = Semantics.getTempVariableTable().size() - 1;
+                            index = Semantics.getTempVariableTable().size();
                             // generate temp variable
                             variable = new Variable(this.tempSymbol + index, type1.equals(type2) ? type1 : "float",
                                     null, 4, 4 * index);
@@ -452,6 +462,12 @@ public class AST {
                             // generate code
                             quad = new Quad("/", root.getChildren().get(0).getSymbol(),
                                     root.getChildren().get(2).getSymbol(), tempToken);
+                            root.getAttributes().put("codes", new ArrayList<Quad>());
+                            if (root.getChildren().get(0).getCodes() != null)
+                                root.getCodes().addAll(root.getChildren().get(0).getCodes());
+                            if (root.getChildren().get(2).getCodes() != null)
+                                root.getCodes().addAll(root.getChildren().get(2).getCodes());
+                            root.getCodes().add(quad);
                         }
                         break;
                     case 14: // multiplicative_expression:multiplicative_expression MOD postfix_expression
@@ -463,7 +479,7 @@ public class AST {
                                             + " [Modulo operator can't be used to other type]");
                         } else {
                             root.getAttributes().put("type", "integer");
-                            index = Semantics.getTempVariableTable().size() - 1;
+                            index = Semantics.getTempVariableTable().size();
                             // generate temp variable
                             variable = new Variable(this.tempSymbol + index, "integer", null, 4, 4 * index);
                             Semantics.addTempVariable(variable);
@@ -474,6 +490,12 @@ public class AST {
                             // generate code
                             quad = new Quad("%", root.getChildren().get(0).getSymbol(),
                                     root.getChildren().get(2).getSymbol(), tempToken);
+                            root.getAttributes().put("codes", new ArrayList<Quad>());
+                            if (root.getChildren().get(0).getCodes() != null)
+                                root.getCodes().addAll(root.getChildren().get(0).getCodes());
+                            if (root.getChildren().get(2).getCodes() != null)
+                                root.getCodes().addAll(root.getChildren().get(2).getCodes());
+                            root.getCodes().add(quad);
                         }
                         break;
                     case 15: // additive_expression:multiplicative_expression
@@ -489,7 +511,7 @@ public class AST {
                                             + " [Add operator can't be used to other type]");
                         } else {
                             root.getAttributes().put("type", type1.equals(type2) ? type1 : "float");
-                            index = Semantics.getTempVariableTable().size() - 1;
+                            index = Semantics.getTempVariableTable().size();
                             // generate temp variable
                             variable = new Variable(this.tempSymbol + index, type1.equals(type2) ? type1 : "float",
                                     null, 4, 4 * index);
@@ -501,6 +523,12 @@ public class AST {
                             // generate code
                             quad = new Quad("+", root.getChildren().get(0).getSymbol(),
                                     root.getChildren().get(2).getSymbol(), tempToken);
+                            root.getAttributes().put("codes", new ArrayList<Quad>());
+                            if (root.getChildren().get(0).getCodes() != null)
+                                root.getCodes().addAll(root.getChildren().get(0).getCodes());
+                            if (root.getChildren().get(2).getCodes() != null)
+                                root.getCodes().addAll(root.getChildren().get(2).getCodes());
+                            root.getCodes().add(quad);
                         }
                         break;
                     case 17: // additive_expression:additive_expression SUB multiplicative_expression
@@ -514,7 +542,7 @@ public class AST {
                         } else {
                             root.getAttributes().put("type", type1.equals(type2) ? type1 : "float");
                             root.getAttributes().put("type", type1.equals(type2) ? type1 : "float");
-                            index = Semantics.getTempVariableTable().size() - 1;
+                            index = Semantics.getTempVariableTable().size();
                             // generate temp variable
                             variable = new Variable(this.tempSymbol + index, type1.equals(type2) ? type1 : "float",
                                     null, 4, 4 * index);
@@ -526,6 +554,12 @@ public class AST {
                             // generate code
                             quad = new Quad("-", root.getChildren().get(0).getSymbol(),
                                     root.getChildren().get(2).getSymbol(), tempToken);
+                            root.getAttributes().put("codes", new ArrayList<Quad>());
+                            if (root.getChildren().get(0).getCodes() != null)
+                                root.getCodes().addAll(root.getChildren().get(0).getCodes());
+                            if (root.getChildren().get(2).getCodes() != null)
+                                root.getCodes().addAll(root.getChildren().get(2).getCodes());
+                            root.getCodes().add(quad);
                         }
                         break;
                     case 18: // relational_expression:additive_expression
@@ -542,7 +576,7 @@ public class AST {
                                             + operator + " operator can't be used to other type]");
                         } else {
                             root.getAttributes().put("type", "boolean");
-                            index = Semantics.getTempVariableTable().size() - 1;
+                            index = Semantics.getTempVariableTable().size();
                             // generate temp variable
                             variable = new Variable(this.tempSymbol + index, "boolean", null, 4, 4 * index);
                             Semantics.addTempVariable(variable);
@@ -553,6 +587,12 @@ public class AST {
                             // generate code
                             quad = new Quad(operator, root.getChildren().get(0).getSymbol(),
                                     root.getChildren().get(2).getSymbol(), tempToken);
+                            root.getAttributes().put("codes", new ArrayList<Quad>());
+                            if (root.getChildren().get(0).getCodes() != null)
+                                root.getCodes().addAll(root.getChildren().get(0).getCodes());
+                            if (root.getChildren().get(2).getCodes() != null)
+                                root.getCodes().addAll(root.getChildren().get(2).getCodes());
+                            root.getCodes().add(quad);
                         }
                         break;
                     case 20: // relational_expression:relational_expression GT additive_expression
@@ -566,7 +606,7 @@ public class AST {
                                             + operator + " operator can't be used to other type]");
                         } else {
                             root.getAttributes().put("type", "boolean");
-                            index = Semantics.getTempVariableTable().size() - 1;
+                            index = Semantics.getTempVariableTable().size();
                             // generate temp variable
                             variable = new Variable(this.tempSymbol + index, "boolean", null, 4, 4 * index);
                             Semantics.addTempVariable(variable);
@@ -577,6 +617,12 @@ public class AST {
                             // generate code
                             quad = new Quad(operator, root.getChildren().get(0).getSymbol(),
                                     root.getChildren().get(2).getSymbol(), tempToken);
+                            root.getAttributes().put("codes", new ArrayList<Quad>());
+                            if (root.getChildren().get(0).getCodes() != null)
+                                root.getCodes().addAll(root.getChildren().get(0).getCodes());
+                            if (root.getChildren().get(2).getCodes() != null)
+                                root.getCodes().addAll(root.getChildren().get(2).getCodes());
+                            root.getCodes().add(quad);
                         }
                         break;
                     case 21: // relational_expression:relational_expression LE additive_expression
@@ -590,7 +636,7 @@ public class AST {
                                             + operator + " operator can't be used to other type]");
                         } else {
                             root.getAttributes().put("type", "boolean");
-                            index = Semantics.getTempVariableTable().size() - 1;
+                            index = Semantics.getTempVariableTable().size();
                             // generate temp variable
                             variable = new Variable(this.tempSymbol + index, "boolean", null, 4, 4 * index);
                             Semantics.addTempVariable(variable);
@@ -601,6 +647,12 @@ public class AST {
                             // generate code
                             quad = new Quad(operator, root.getChildren().get(0).getSymbol(),
                                     root.getChildren().get(2).getSymbol(), tempToken);
+                            root.getAttributes().put("codes", new ArrayList<Quad>());
+                            if (root.getChildren().get(0).getCodes() != null)
+                                root.getCodes().addAll(root.getChildren().get(0).getCodes());
+                            if (root.getChildren().get(2).getCodes() != null)
+                                root.getCodes().addAll(root.getChildren().get(2).getCodes());
+                            root.getCodes().add(quad);
                         }
                         break;
                     case 22: // relational_expression:relational_expression GE additive_expression
@@ -614,7 +666,7 @@ public class AST {
                                             + operator + " operator can't be used to other type]");
                         } else {
                             root.getAttributes().put("type", "boolean");
-                            index = Semantics.getTempVariableTable().size() - 1;
+                            index = Semantics.getTempVariableTable().size();
                             // generate temp variable
                             variable = new Variable(this.tempSymbol + index, "boolean", null, 4, 4 * index);
                             Semantics.addTempVariable(variable);
@@ -625,6 +677,12 @@ public class AST {
                             // generate code
                             quad = new Quad(operator, root.getChildren().get(0).getSymbol(),
                                     root.getChildren().get(2).getSymbol(), tempToken);
+                            root.getAttributes().put("codes", new ArrayList<Quad>());
+                            if (root.getChildren().get(0).getCodes() != null)
+                                root.getCodes().addAll(root.getChildren().get(0).getCodes());
+                            if (root.getChildren().get(2).getCodes() != null)
+                                root.getCodes().addAll(root.getChildren().get(2).getCodes());
+                            root.getCodes().add(quad);
                         }
                         break;
                     case 23: // equality_expression:relational_expression
@@ -641,7 +699,7 @@ public class AST {
                                             + operator + " operator can't be used to other type]");
                         } else {
                             root.getAttributes().put("type", "boolean");
-                            index = Semantics.getTempVariableTable().size() - 1;
+                            index = Semantics.getTempVariableTable().size();
                             // generate temp variable
                             variable = new Variable(this.tempSymbol + index, "boolean", null, 4, 4 * index);
                             Semantics.addTempVariable(variable);
@@ -652,6 +710,12 @@ public class AST {
                             // generate code
                             quad = new Quad(operator, root.getChildren().get(0).getSymbol(),
                                     root.getChildren().get(2).getSymbol(), tempToken);
+                            root.getAttributes().put("codes", new ArrayList<Quad>());
+                            if (root.getChildren().get(0).getCodes() != null)
+                                root.getCodes().addAll(root.getChildren().get(0).getCodes());
+                            if (root.getChildren().get(2).getCodes() != null)
+                                root.getCodes().addAll(root.getChildren().get(2).getCodes());
+                            root.getCodes().add(quad);
                         }
                         break;
                     case 25: // equality_expression:equality_expression NEQ relational_expression
@@ -665,7 +729,7 @@ public class AST {
                                             + operator + " operator can't be used to other type]");
                         } else {
                             root.getAttributes().put("type", "boolean");
-                            index = Semantics.getTempVariableTable().size() - 1;
+                            index = Semantics.getTempVariableTable().size();
                             // generate temp variable
                             variable = new Variable(this.tempSymbol + index, "boolean", null, 4, 4 * index);
                             Semantics.addTempVariable(variable);
@@ -676,6 +740,12 @@ public class AST {
                             // generate code
                             quad = new Quad(operator, root.getChildren().get(0).getSymbol(),
                                     root.getChildren().get(2).getSymbol(), tempToken);
+                            root.getAttributes().put("codes", new ArrayList<Quad>());
+                            if (root.getChildren().get(0).getCodes() != null)
+                                root.getCodes().addAll(root.getChildren().get(0).getCodes());
+                            if (root.getChildren().get(2).getCodes() != null)
+                                root.getCodes().addAll(root.getChildren().get(2).getCodes());
+                            root.getCodes().add(quad);
                         }
                         break;
                     case 26: // logical_and_expression:equality_expression
@@ -692,7 +762,7 @@ public class AST {
                                             + operator + " operator can't be used to other type]");
                         } else {
                             root.getAttributes().put("type", "boolean");
-                            index = Semantics.getTempVariableTable().size() - 1;
+                            index = Semantics.getTempVariableTable().size();
                             // generate temp variable
                             variable = new Variable(this.tempSymbol + index, "boolean", null, 4, 4 * index);
                             Semantics.addTempVariable(variable);
@@ -703,6 +773,12 @@ public class AST {
                             // generate code
                             quad = new Quad(operator, root.getChildren().get(0).getSymbol(),
                                     root.getChildren().get(2).getSymbol(), tempToken);
+                            root.getAttributes().put("codes", new ArrayList<Quad>());
+                            if (root.getChildren().get(0).getCodes() != null)
+                                root.getCodes().addAll(root.getChildren().get(0).getCodes());
+                            if (root.getChildren().get(2).getCodes() != null)
+                                root.getCodes().addAll(root.getChildren().get(2).getCodes());
+                            root.getCodes().add(quad);
                         }
                         break;
                     case 28: // logical_or_expression:logical_and_expression
@@ -719,7 +795,7 @@ public class AST {
                                             + operator + " operator can't be used to other type]");
                         } else {
                             root.getAttributes().put("type", "boolean");
-                            index = Semantics.getTempVariableTable().size() - 1;
+                            index = Semantics.getTempVariableTable().size();
                             // generate temp variable
                             variable = new Variable(this.tempSymbol + index, "boolean", null, 4, 4 * index);
                             Semantics.addTempVariable(variable);
@@ -730,6 +806,12 @@ public class AST {
                             // generate code
                             quad = new Quad(operator, root.getChildren().get(0).getSymbol(),
                                     root.getChildren().get(2).getSymbol(), tempToken);
+                            root.getAttributes().put("codes", new ArrayList<Quad>());
+                            if (root.getChildren().get(0).getCodes() != null)
+                                root.getCodes().addAll(root.getChildren().get(0).getCodes());
+                            if (root.getChildren().get(2).getCodes() != null)
+                                root.getCodes().addAll(root.getChildren().get(2).getCodes());
+                            root.getCodes().add(quad);
                         }
                         break;
                     case 30: // assignment_expression:logical_or_expression
@@ -759,7 +841,13 @@ public class AST {
                                             root.getChildren().get(2).getType());
                                     // generate code
                                     quad = new Quad(operator, root.getChildren().get(2).getSymbol(), null,
-                                            root.getChildren().get(2).getSymbol());
+                                            root.getChildren().get(0).getSymbol());
+                                    root.getAttributes().put("codes", new ArrayList<Quad>());
+                                    if (root.getChildren().get(0).getCodes() != null)
+                                        root.getCodes().addAll(root.getChildren().get(0).getCodes());
+                                    if (root.getChildren().get(2).getCodes() != null)
+                                        root.getCodes().addAll(root.getChildren().get(2).getCodes());
+                                    root.getCodes().add(quad);
                                 }
                             }
                         }
@@ -786,18 +874,25 @@ public class AST {
                         break;
                     case 41:
                         break;
-                    case 42:
+                    case 42: // expression:assignment_expression
+                        root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
                     case 43:
                         break;
                     case 44:
                         break;
                     case 45: // declaration:VAL init_declarator_list SEMICOLON
-
+                        root.getAttributes().putAll(root.getChildren().get(1).getAttributes());
                         break;
-                    case 46:
+                    case 46: // init_declarator_list:init_declarator
+                        root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
-                    case 47:
+                    case 47: // init_declarator_list:init_declarator_list COMMA init_declarator
+                        root.getAttributes().put("codes", new ArrayList<Quad>());
+                        if (root.getChildren().get(0).getCodes() != null)
+                            root.getCodes().addAll(root.getChildren().get(0).getCodes());
+                        if (root.getChildren().get(2).getCodes() != null)
+                            root.getCodes().addAll(root.getChildren().get(2).getCodes());
                         break;
                     case 48: // init_declarator:IDENTIFIER
                         variable = new Variable(root.getChildren().get(0).getToken().getOriginWord(), "", null, 4, 0);
@@ -811,6 +906,7 @@ public class AST {
                         variable.setOffset(index * 4);
                         break;
                     case 49: // init_declarator:IDENTIFIER ASSIGN initializer
+                        operator = "=";
                         variable = new Variable(root.getChildren().get(0).getToken().getOriginWord(),
                                 root.getChildren().get(2).getType(),
                                 root.getChildren().get(2).getToken().getOriginWord(), 4, 0);
@@ -821,6 +917,11 @@ public class AST {
                                             + " [Variable has been declared before]");
                         }
                         variable.setOffset(index * 4);
+                        // generate code
+                        quad = new Quad(operator, root.getChildren().get(2).getSymbol(), null,
+                                root.getChildren().get(0).getToken());
+                        root.getAttributes().put("codes", new ArrayList<Quad>());
+                        root.getCodes().add(quad);
                         break;
                     case 50: // identifier_list:IDENTIFIER
                         root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
@@ -850,7 +951,8 @@ public class AST {
                         break;
                     case 62:
                         break;
-                    case 63:
+                    case 63: // statement_block:statement
+                        root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
                     case 64:
                         break;
@@ -860,17 +962,20 @@ public class AST {
                         break;
                     case 67:
                         break;
-                    case 68:
+                    case 68: // compound_statement:L_CURLY statement_block R_CURLY
+                        root.getAttributes().putAll(root.getChildren().get(1).getAttributes());
                         break;
                     case 69:
                         break;
-                    case 70:
+                    case 70: // expression_statement:expression SEMICOLON
+                        root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
                     case 71:
                         break;
                     case 72:
                         break;
-                    case 73:
+                    case 73: // selection_statement:IF L_PAREN expression R_PAREN compound_statement
+
                         break;
                     case 74:
                         break;
@@ -896,15 +1001,23 @@ public class AST {
                         break;
                     case 85:
                         break;
-                    case 86:
+                    case 86: // translation_unit:external_declaration
+                        root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
-                    case 87:
+                    case 87: // translation_unit:translation_unit external_declaration
+                        root.getAttributes().put("codes", new ArrayList<Quad>());
+                        if (root.getChildren().get(0).getCodes() != null)
+                            root.getCodes().addAll(root.getChildren().get(0).getCodes());
+                        if (root.getChildren().get(1).getCodes() != null)
+                            root.getCodes().addAll(root.getChildren().get(1).getCodes());
                         break;
                     case 88:
                         break;
-                    case 89:
+                    case 89: // external_declaration:declaration
+                        root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
-                    case 90:
+                    case 90: // external_declaration:expression_statement
+                        root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
                     case 91:
                         break;
@@ -939,7 +1052,9 @@ public class AST {
                     throw new Exception("Unsupported action type");
                 }
             } else {
-                System.err.println("Error occurred at token " + top);
+                Semantics.addErrorMessage("Error at Line: " + analyse.getTokenList().get(top).getLineNumber()
+                        + " [Semantics analyse error]");
+                return;
             }
         }
     }

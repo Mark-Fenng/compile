@@ -54,9 +54,15 @@ public class Semantics {
         quadTable.add(quad);
     }
 
-    public static int addTempVariable(Variable variable) {
-        variableTable.add(variable);
-        return variableTable.size() - 1;
+    public static void addTempVariable(Variable variable) {
+        tempVariableTable.add(variable);
+    }
+
+    /**
+     * @return the quadTable
+     */
+    public static List<Quad> getQuadTable() {
+        return quadTable;
     }
 
     /**
