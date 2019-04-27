@@ -7,6 +7,7 @@ import Grammar.*;
 public class Semantics {
     private static List<String> errorMessage = new ArrayList<>();
     private static List<Variable> variableTable = new ArrayList<>();
+    private static List<Variable> tempVariableTable = new ArrayList<>();
     private static List<Quad> quadTable = new ArrayList<>();
 
     public void action(Formula formula, List<Token> tokenList) {
@@ -49,8 +50,26 @@ public class Semantics {
         return errorMessage;
     }
 
+    public static void addQuad(Quad quad) {
+        quadTable.add(quad);
+    }
+
+    public static int addTempVariable(Variable variable) {
+        variableTable.add(variable);
+        return variableTable.size() - 1;
+    }
+
+    /**
+     * @return the tempVariableTable
+     */
+    public static List<Variable> getTempVariableTable() {
+        return tempVariableTable;
+    }
+
     public static void clearAll() {
         variableTable = new ArrayList<>();
         errorMessage = new ArrayList<>();
+        tempVariableTable = new ArrayList<>();
+        quadTable = new ArrayList<>();
     }
 }

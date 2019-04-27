@@ -71,6 +71,14 @@ public class Node {
         return (String) this.attributes.get("type");
     }
 
+    public Token getSymbol() {
+        return (Token) this.attributes.get("symbol");
+    }
+
+    public String getTable() {
+        return (String) this.attributes.get("table");
+    }
+
     /**
      * @return the value
      */

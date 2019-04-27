@@ -3,8 +3,7 @@ package Grammar;
 import java.util.*;
 
 import Lexer.*;
-import Semantics.Semantics;
-import Semantics.Variable;
+import Semantics.*;
 
 public class AST {
     private Node root = null;
@@ -12,6 +11,9 @@ public class AST {
     private static List<String> numType = new ArrayList<>();
     private static List<String> symbolStackState = new ArrayList<>();
     private static List<String> stateStackState = new ArrayList<>();
+    private String variableTable = "variable";
+    private String tempTable = "temp";
+    private String tempSymbol = "$";
     static {
         numType.add("boolean");
         numType.add("integer");
@@ -330,8 +332,10 @@ public class AST {
                     int formulaIndex = LR1.grammars.indexOf(formula);
                     int index;
                     Variable variable;
-                    String type1, type2;
+                    String type1, type2, operator;
                     Node root = formulaLeft;
+                    Quad quad;
+                    Token tempToken;
                     switch (formulaIndex) {
                     case 0:
                         break;
@@ -339,6 +343,8 @@ public class AST {
                         root.getChildren().get(0).getAttributes().put("type",
                                 root.getChildren().get(0).getToken().getType());
                         root.getAttributes().put("type", root.getChildren().get(0).getToken().getType());
+                        root.getAttributes().put("table", null);
+                        root.getAttributes().put("symbol", root.getChildren().get(0).getToken());
                         break;
                     case 2: // primary_expression:IDENTIFIER
                         variable = Semantics.getVariable(root.getChildren().get(0).getToken().getOriginWord());
@@ -348,6 +354,8 @@ public class AST {
                                     + root.getChildren().get(0).getToken().getOriginWord() + " has not been declared]");
                         } else {
                             root.getAttributes().put("type", variable.getType());
+                            root.getAttributes().put("table", this.variableTable);
+                            root.getAttributes().put("symbol", root.getChildren().get(0).getToken());
                         }
                         break;
                     case 3: // primary_expression:L_PAREN expression R_PAREN
@@ -374,6 +382,16 @@ public class AST {
                                             + " [Not operator can't be used to other type]");
                         } else {
                             root.getAttributes().put("type", "boolean");
+                            index = Semantics.getTempVariableTable().size() - 1;
+                            // generate temp variable
+                            variable = new Variable(this.tempSymbol + index, "boolean", null, 4, 4 * index);
+                            Semantics.addTempVariable(variable);
+                            root.getAttributes().put("table", this.tempTable);
+                            // generate token
+                            tempToken = new Token("temp", this.tempSymbol + index, 0, this.tempSymbol + index, -1);
+                            root.getAttributes().put("symbol", tempToken);
+                            // generate code
+                            quad = new Quad("!", root.getChildren().get(1).getSymbol(), null, tempToken);
                         }
                         break;
                     case 10: // unary_expression:SUB postfix_expression
@@ -383,7 +401,18 @@ public class AST {
                                     "Error at Line: " + root.getChildren().get(0).getToken().getLineNumber()
                                             + " [Sub operator can't be used to other type]");
                         } else {
-                            root.getAttributes().put("type", root.getChildren().get(1).getAttributes().get("type"));
+                            root.getAttributes().put("type", root.getChildren().get(1).getType());
+                            index = Semantics.getTempVariableTable().size() - 1;
+                            // generate temp variable
+                            variable = new Variable(this.tempSymbol + index, root.getChildren().get(1).getType(), null,
+                                    4, 4 * index);
+                            Semantics.addTempVariable(variable);
+                            root.getAttributes().put("table", this.tempTable);
+                            // generate token
+                            tempToken = new Token("temp", this.tempSymbol + index, 0, this.tempSymbol + index, -1);
+                            root.getAttributes().put("symbol", tempToken);
+                            // generate code
+                            quad = new Quad("-", root.getChildren().get(1).getSymbol(), null, tempToken);
                         }
                         break;
                     case 11: // multiplicative_expression:unary_expression
@@ -399,6 +428,18 @@ public class AST {
                                             + " [Multiply operator can't be used to other type]");
                         } else {
                             root.getAttributes().put("type", type1.equals(type2) ? type1 : "float");
+                            index = Semantics.getTempVariableTable().size() - 1;
+                            // generate temp variable
+                            variable = new Variable(this.tempSymbol + index, type1.equals(type2) ? type1 : "float",
+                                    null, 4, 4 * index);
+                            Semantics.addTempVariable(variable);
+                            root.getAttributes().put("table", this.tempTable);
+                            // generate token
+                            tempToken = new Token("temp", this.tempSymbol + index, 0, this.tempSymbol + index, -1);
+                            root.getAttributes().put("symbol", tempToken);
+                            // generate code
+                            quad = new Quad("*", root.getChildren().get(0).getSymbol(),
+                                    root.getChildren().get(2).getSymbol(), tempToken);
                         }
                         break;
                     case 13: // multiplicative_expression:multiplicative_expression DIV postfix_expression
@@ -411,6 +452,18 @@ public class AST {
                                             + " [Division operator can't be used to other type]");
                         } else {
                             root.getAttributes().put("type", type1.equals(type2) ? type1 : "float");
+                            index = Semantics.getTempVariableTable().size() - 1;
+                            // generate temp variable
+                            variable = new Variable(this.tempSymbol + index, type1.equals(type2) ? type1 : "float",
+                                    null, 4, 4 * index);
+                            Semantics.addTempVariable(variable);
+                            root.getAttributes().put("table", this.tempTable);
+                            // generate token
+                            tempToken = new Token("temp", this.tempSymbol + index, 0, this.tempSymbol + index, -1);
+                            root.getAttributes().put("symbol", tempToken);
+                            // generate code
+                            quad = new Quad("/", root.getChildren().get(0).getSymbol(),
+                                    root.getChildren().get(2).getSymbol(), tempToken);
                         }
                         break;
                     case 14: // multiplicative_expression:multiplicative_expression MOD postfix_expression
@@ -421,7 +474,18 @@ public class AST {
                                     "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
                                             + " [Modulo operator can't be used to other type]");
                         } else {
-                            root.getAttributes().put("type", type1.equals(type2) ? type1 : "float");
+                            root.getAttributes().put("type", "integer");
+                            index = Semantics.getTempVariableTable().size() - 1;
+                            // generate temp variable
+                            variable = new Variable(this.tempSymbol + index, "integer", null, 4, 4 * index);
+                            Semantics.addTempVariable(variable);
+                            root.getAttributes().put("table", this.tempTable);
+                            // generate token
+                            tempToken = new Token("temp", this.tempSymbol + index, 0, this.tempSymbol + index, -1);
+                            root.getAttributes().put("symbol", tempToken);
+                            // generate code
+                            quad = new Quad("%", root.getChildren().get(0).getSymbol(),
+                                    root.getChildren().get(2).getSymbol(), tempToken);
                         }
                         break;
                     case 15: // additive_expression:multiplicative_expression
@@ -437,6 +501,18 @@ public class AST {
                                             + " [Add operator can't be used to other type]");
                         } else {
                             root.getAttributes().put("type", type1.equals(type2) ? type1 : "float");
+                            index = Semantics.getTempVariableTable().size() - 1;
+                            // generate temp variable
+                            variable = new Variable(this.tempSymbol + index, type1.equals(type2) ? type1 : "float",
+                                    null, 4, 4 * index);
+                            Semantics.addTempVariable(variable);
+                            root.getAttributes().put("table", this.tempTable);
+                            // generate token
+                            tempToken = new Token("temp", this.tempSymbol + index, 0, this.tempSymbol + index, -1);
+                            root.getAttributes().put("symbol", tempToken);
+                            // generate code
+                            quad = new Quad("+", root.getChildren().get(0).getSymbol(),
+                                    root.getChildren().get(2).getSymbol(), tempToken);
                         }
                         break;
                     case 17: // additive_expression:additive_expression SUB multiplicative_expression
@@ -449,114 +525,223 @@ public class AST {
                                             + " [Sub operator can't be used to other type]");
                         } else {
                             root.getAttributes().put("type", type1.equals(type2) ? type1 : "float");
+                            root.getAttributes().put("type", type1.equals(type2) ? type1 : "float");
+                            index = Semantics.getTempVariableTable().size() - 1;
+                            // generate temp variable
+                            variable = new Variable(this.tempSymbol + index, type1.equals(type2) ? type1 : "float",
+                                    null, 4, 4 * index);
+                            Semantics.addTempVariable(variable);
+                            root.getAttributes().put("table", this.tempTable);
+                            // generate token
+                            tempToken = new Token("temp", this.tempSymbol + index, 0, this.tempSymbol + index, -1);
+                            root.getAttributes().put("symbol", tempToken);
+                            // generate code
+                            quad = new Quad("-", root.getChildren().get(0).getSymbol(),
+                                    root.getChildren().get(2).getSymbol(), tempToken);
                         }
                         break;
                     case 18: // relational_expression:additive_expression
                         root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
                     case 19: // relational_expression:relational_expression LT additive_expression
+                        operator = "<";
                         type1 = root.getChildren().get(0).getType();
                         type2 = root.getChildren().get(2).getType();
                         if ((!type1.equals("integer") && !type1.equals("float"))
                                 || (!type2.equals("integer") && !type2.equals("float"))) {
                             Semantics.addErrorMessage(
-                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
-                                            + " [< operator can't be used to other type]");
+                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber() + " ["
+                                            + operator + " operator can't be used to other type]");
                         } else {
                             root.getAttributes().put("type", "boolean");
+                            index = Semantics.getTempVariableTable().size() - 1;
+                            // generate temp variable
+                            variable = new Variable(this.tempSymbol + index, "boolean", null, 4, 4 * index);
+                            Semantics.addTempVariable(variable);
+                            root.getAttributes().put("table", this.tempTable);
+                            // generate token
+                            tempToken = new Token("temp", this.tempSymbol + index, 0, this.tempSymbol + index, -1);
+                            root.getAttributes().put("symbol", tempToken);
+                            // generate code
+                            quad = new Quad(operator, root.getChildren().get(0).getSymbol(),
+                                    root.getChildren().get(2).getSymbol(), tempToken);
                         }
                         break;
                     case 20: // relational_expression:relational_expression GT additive_expression
+                        operator = ">";
                         type1 = root.getChildren().get(0).getType();
                         type2 = root.getChildren().get(2).getType();
                         if ((!type1.equals("integer") && !type1.equals("float"))
                                 || (!type2.equals("integer") && !type2.equals("float"))) {
                             Semantics.addErrorMessage(
-                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
-                                            + " [> operator can't be used to other type]");
+                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber() + " ["
+                                            + operator + " operator can't be used to other type]");
                         } else {
                             root.getAttributes().put("type", "boolean");
+                            index = Semantics.getTempVariableTable().size() - 1;
+                            // generate temp variable
+                            variable = new Variable(this.tempSymbol + index, "boolean", null, 4, 4 * index);
+                            Semantics.addTempVariable(variable);
+                            root.getAttributes().put("table", this.tempTable);
+                            // generate token
+                            tempToken = new Token("temp", this.tempSymbol + index, 0, this.tempSymbol + index, -1);
+                            root.getAttributes().put("symbol", tempToken);
+                            // generate code
+                            quad = new Quad(operator, root.getChildren().get(0).getSymbol(),
+                                    root.getChildren().get(2).getSymbol(), tempToken);
                         }
                         break;
                     case 21: // relational_expression:relational_expression LE additive_expression
+                        operator = "<=";
                         type1 = root.getChildren().get(0).getType();
                         type2 = root.getChildren().get(2).getType();
                         if ((!type1.equals("integer") && !type1.equals("float"))
                                 || (!type2.equals("integer") && !type2.equals("float"))) {
                             Semantics.addErrorMessage(
-                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
-                                            + " [<= operator can't be used to other type]");
+                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber() + " ["
+                                            + operator + " operator can't be used to other type]");
                         } else {
                             root.getAttributes().put("type", "boolean");
+                            index = Semantics.getTempVariableTable().size() - 1;
+                            // generate temp variable
+                            variable = new Variable(this.tempSymbol + index, "boolean", null, 4, 4 * index);
+                            Semantics.addTempVariable(variable);
+                            root.getAttributes().put("table", this.tempTable);
+                            // generate token
+                            tempToken = new Token("temp", this.tempSymbol + index, 0, this.tempSymbol + index, -1);
+                            root.getAttributes().put("symbol", tempToken);
+                            // generate code
+                            quad = new Quad(operator, root.getChildren().get(0).getSymbol(),
+                                    root.getChildren().get(2).getSymbol(), tempToken);
                         }
                         break;
                     case 22: // relational_expression:relational_expression GE additive_expression
+                        operator = ">=";
                         type1 = root.getChildren().get(0).getType();
                         type2 = root.getChildren().get(2).getType();
                         if ((!type1.equals("integer") && !type1.equals("float"))
                                 || (!type2.equals("integer") && !type2.equals("float"))) {
                             Semantics.addErrorMessage(
-                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
-                                            + " [>= operator can't be used to other type]");
+                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber() + " ["
+                                            + operator + " operator can't be used to other type]");
                         } else {
                             root.getAttributes().put("type", "boolean");
+                            index = Semantics.getTempVariableTable().size() - 1;
+                            // generate temp variable
+                            variable = new Variable(this.tempSymbol + index, "boolean", null, 4, 4 * index);
+                            Semantics.addTempVariable(variable);
+                            root.getAttributes().put("table", this.tempTable);
+                            // generate token
+                            tempToken = new Token("temp", this.tempSymbol + index, 0, this.tempSymbol + index, -1);
+                            root.getAttributes().put("symbol", tempToken);
+                            // generate code
+                            quad = new Quad(operator, root.getChildren().get(0).getSymbol(),
+                                    root.getChildren().get(2).getSymbol(), tempToken);
                         }
                         break;
                     case 23: // equality_expression:relational_expression
                         root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
                     case 24: // equality_expression:equality_expression EQ relational_expression
+                        operator = "==";
                         type1 = root.getChildren().get(0).getType();
                         type2 = root.getChildren().get(2).getType();
                         if ((!type1.equals("integer") && !type1.equals("float"))
                                 || (!type2.equals("integer") && !type2.equals("float"))) {
                             Semantics.addErrorMessage(
-                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
-                                            + " [== operator can't be used to other type]");
+                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber() + " ["
+                                            + operator + " operator can't be used to other type]");
                         } else {
                             root.getAttributes().put("type", "boolean");
+                            index = Semantics.getTempVariableTable().size() - 1;
+                            // generate temp variable
+                            variable = new Variable(this.tempSymbol + index, "boolean", null, 4, 4 * index);
+                            Semantics.addTempVariable(variable);
+                            root.getAttributes().put("table", this.tempTable);
+                            // generate token
+                            tempToken = new Token("temp", this.tempSymbol + index, 0, this.tempSymbol + index, -1);
+                            root.getAttributes().put("symbol", tempToken);
+                            // generate code
+                            quad = new Quad(operator, root.getChildren().get(0).getSymbol(),
+                                    root.getChildren().get(2).getSymbol(), tempToken);
                         }
                         break;
                     case 25: // equality_expression:equality_expression NEQ relational_expression
+                        operator = "!=";
                         type1 = root.getChildren().get(0).getType();
                         type2 = root.getChildren().get(2).getType();
                         if ((!type1.equals("integer") && !type1.equals("float"))
                                 || (!type2.equals("integer") && !type2.equals("float"))) {
                             Semantics.addErrorMessage(
-                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
-                                            + " [!= operator can't be used to other type]");
+                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber() + " ["
+                                            + operator + " operator can't be used to other type]");
                         } else {
                             root.getAttributes().put("type", "boolean");
+                            index = Semantics.getTempVariableTable().size() - 1;
+                            // generate temp variable
+                            variable = new Variable(this.tempSymbol + index, "boolean", null, 4, 4 * index);
+                            Semantics.addTempVariable(variable);
+                            root.getAttributes().put("table", this.tempTable);
+                            // generate token
+                            tempToken = new Token("temp", this.tempSymbol + index, 0, this.tempSymbol + index, -1);
+                            root.getAttributes().put("symbol", tempToken);
+                            // generate code
+                            quad = new Quad(operator, root.getChildren().get(0).getSymbol(),
+                                    root.getChildren().get(2).getSymbol(), tempToken);
                         }
                         break;
                     case 26: // logical_and_expression:equality_expression
                         root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
                     case 27: // logical_and_expression:logical_and_expression AND equality_expression
+                        operator = "&";
                         type1 = root.getChildren().get(0).getType();
                         type2 = root.getChildren().get(2).getType();
                         if ((!type1.equals("integer") && !type1.equals("float"))
                                 || (!type2.equals("integer") && !type2.equals("float"))) {
                             Semantics.addErrorMessage(
-                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
-                                            + " [And operator can't be used to other type]");
+                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber() + " ["
+                                            + operator + " operator can't be used to other type]");
                         } else {
                             root.getAttributes().put("type", "boolean");
+                            index = Semantics.getTempVariableTable().size() - 1;
+                            // generate temp variable
+                            variable = new Variable(this.tempSymbol + index, "boolean", null, 4, 4 * index);
+                            Semantics.addTempVariable(variable);
+                            root.getAttributes().put("table", this.tempTable);
+                            // generate token
+                            tempToken = new Token("temp", this.tempSymbol + index, 0, this.tempSymbol + index, -1);
+                            root.getAttributes().put("symbol", tempToken);
+                            // generate code
+                            quad = new Quad(operator, root.getChildren().get(0).getSymbol(),
+                                    root.getChildren().get(2).getSymbol(), tempToken);
                         }
                         break;
                     case 28: // logical_or_expression:logical_and_expression
                         root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
                     case 29: // logical_or_expression:logical_or_expression OR logical_and_expression
+                        operator = "|";
                         type1 = root.getChildren().get(0).getType();
                         type2 = root.getChildren().get(2).getType();
                         if ((!type1.equals("integer") && !type1.equals("float"))
                                 || (!type2.equals("integer") && !type2.equals("float"))) {
                             Semantics.addErrorMessage(
-                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
-                                            + " [Or operator can't be used to other type]");
+                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber() + " ["
+                                            + operator + " operator can't be used to other type]");
                         } else {
                             root.getAttributes().put("type", "boolean");
+                            index = Semantics.getTempVariableTable().size() - 1;
+                            // generate temp variable
+                            variable = new Variable(this.tempSymbol + index, "boolean", null, 4, 4 * index);
+                            Semantics.addTempVariable(variable);
+                            root.getAttributes().put("table", this.tempTable);
+                            // generate token
+                            tempToken = new Token("temp", this.tempSymbol + index, 0, this.tempSymbol + index, -1);
+                            root.getAttributes().put("symbol", tempToken);
+                            // generate code
+                            quad = new Quad(operator, root.getChildren().get(0).getSymbol(),
+                                    root.getChildren().get(2).getSymbol(), tempToken);
                         }
                         break;
                     case 30: // assignment_expression:logical_or_expression
@@ -564,12 +749,13 @@ public class AST {
                         break;
                     case 31: // assignment_expression:postfix_expression assignment_operator
                              // assignment_expression
+                        operator = "=";
                         type1 = root.getChildren().get(0).getType();
                         type2 = root.getChildren().get(2).getType();
                         if (!numType.contains(type1) && !numType.contains(type2)) {
                             Semantics.addErrorMessage(
-                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
-                                            + " [Assign operator can't be used to other type]");
+                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber() + " ["
+                                            + operator + " operator can't be used to other type]");
                         } else {
                             root.getChildren().get(0).getAttributes().put("type", root.getChildren().get(2).getType());
                             root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
