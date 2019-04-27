@@ -45,7 +45,9 @@ public class AST {
         }
         int index;
         Variable variable;
-        String type1, type2;
+        String type1, type2, operator;
+        Quad quad;
+        Token tempToken;
         switch (formulaIndex) {
         case 0:
             break;
@@ -943,7 +945,8 @@ public class AST {
                         break;
                     case 58:
                         break;
-                    case 59:
+                    case 59: // statement:expression_statement
+                        root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
                     case 60:
                         break;
@@ -975,11 +978,49 @@ public class AST {
                     case 72:
                         break;
                     case 73: // selection_statement:IF L_PAREN expression R_PAREN compound_statement
-
+                        // if goto +2
+                        tempToken = new Token("goto", String.valueOf(2), 0, "", -1);
+                        // generate code
+                        quad = new Quad("if", root.getChildren().get(2).getSymbol(), null, tempToken);
+                        root.getAttributes().put("codes", new ArrayList<Quad>());
+                        if (root.getChildren().get(2).getCodes() != null)
+                            root.getCodes().addAll(root.getChildren().get(2).getCodes());
+                        root.getCodes().add(quad);
+                        if (root.getChildren().get(4).getCodes() != null) {
+                            // if goto +2
+                            tempToken = new Token("goto",
+                                    String.valueOf(root.getChildren().get(4).getCodes().size() + 1), 0, "", -1);
+                            quad = new Quad("goto", null, null, tempToken);
+                            root.getCodes().add(quad);
+                            root.getCodes().addAll(root.getChildren().get(4).getCodes());
+                        }
                         break;
                     case 74:
                         break;
-                    case 75:
+                    case 75: // selection_statement:IF L_PAREN expression R_PAREN compound_statement ELSE
+                             // compound_statement
+                        // if goto +2
+                        tempToken = new Token("goto", String.valueOf(2), 0, "", -1);
+                        // generate code
+                        quad = new Quad("if", root.getChildren().get(2).getSymbol(), null, tempToken);
+                        root.getAttributes().put("codes", new ArrayList<Quad>());
+                        if (root.getChildren().get(2).getCodes() != null)
+                            root.getCodes().addAll(root.getChildren().get(2).getCodes());
+                        root.getCodes().add(quad);
+                        if (root.getChildren().get(4).getCodes() != null) {
+                            // if goto (if statement size) +2
+                            tempToken = new Token("goto",
+                                    String.valueOf(root.getChildren().get(4).getCodes().size() + 2), 0, "", -1);
+                            quad = new Quad("goto", null, null, tempToken);
+                            root.getCodes().add(quad);
+                            root.getCodes().addAll(root.getChildren().get(4).getCodes());
+                            // if goto (else statement size) +1
+                            tempToken = new Token("goto",
+                                    String.valueOf(root.getChildren().get(6).getCodes().size() + 1), 0, "", -1);
+                            quad = new Quad("goto", null, null, tempToken);
+                            root.getCodes().add(quad);
+                            root.getCodes().addAll(root.getChildren().get(6).getCodes());
+                        }
                         break;
                     case 76:
                         break;
@@ -1019,9 +1060,11 @@ public class AST {
                     case 90: // external_declaration:expression_statement
                         root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
-                    case 91:
+                    case 91: // external_declaration:selection_statement
+                        root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
-                    case 92:
+                    case 92: // external_declaration:iteration_statement
+                        root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
                     case 93:
                         break;

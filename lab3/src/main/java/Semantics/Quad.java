@@ -39,6 +39,10 @@ public class Quad {
             }
         case "=":
             return result.getOriginWord() + "=" + v1.getOriginWord();
+        case "if":
+            return "if " + v1.getOriginWord() + " goto " + result.getOriginWord();
+        case "goto":
+            return "goto " + result.getOriginWord();
         default:
             return "";
         }
