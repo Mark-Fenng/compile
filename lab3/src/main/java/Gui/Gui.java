@@ -72,9 +72,9 @@ public class Gui extends JFrame implements ActionListener {
     private JScrollPane scrollpane_triples;
 
     // 输出四地址指令
-    private JTable tb_four;
-    private DefaultTableModel tbmodel_four;
-    private JScrollPane scrollpane_four;
+    private JTable tb_error;
+    private DefaultTableModel tbmodel_error;
+    private JScrollPane scrollpane_error;
 
     Analyse analyse;
 
@@ -170,7 +170,7 @@ public class Gui extends JFrame implements ActionListener {
         main_panel.add(lb_triples);
         lb_triples.setBounds(440, 360, 80, 20);
 
-        lb_four = new JLabel("四地址指令");
+        lb_four = new JLabel("错误信息");
         main_panel.add(lb_four);
         lb_four.setBounds(830, 360, 80, 20);
 
@@ -181,12 +181,13 @@ public class Gui extends JFrame implements ActionListener {
         main_panel.add(scrollpane_triples);
         scrollpane_triples.setBounds(440, 400, 360, 300);
 
-        tbmodel_four = new DefaultTableModel(null, new String[] { "序号", "四地址码" });
-        tb_four = new JTable(tbmodel_four);
-        tb_four.setEnabled(false);
-        scrollpane_four = new JScrollPane(tb_four);
-        main_panel.add(scrollpane_four);
-        scrollpane_four.setBounds(830, 400, 360, 300);
+        tbmodel_error = new DefaultTableModel(null, new String[] { "错误信息" });
+        tb_error = new JTable(tbmodel_error);
+        tb_error.setEnabled(false);
+        tb_error.setForeground(Color.red);
+        scrollpane_error = new JScrollPane(tb_error);
+        main_panel.add(scrollpane_error);
+        scrollpane_error.setBounds(830, 400, 360, 300);
 
         add(main_panel);
     }
@@ -215,6 +216,7 @@ public class Gui extends JFrame implements ActionListener {
                     e1.printStackTrace();
                 }
                 addSymbolTable(Semantics.getVariableTable(), tbmodel_symbol_list);
+                addErrorTable(Semantics.getErrorMessage(), tbmodel_error);
                 // 语义分析
                 /*
                  * SemanticAnalyse semanticanalyse = new SemanticAnalyse(ta_input.getText(),
@@ -262,11 +264,12 @@ public class Gui extends JFrame implements ActionListener {
         // System.out.println(tbmodel_lex_result.getRowCount());
         // 事先要是不给他们赋值的话就会造成，tbmodel_grammar_process在删除的过程中会不断
         // 地减少，然后就会出现很蛋疼的删不干净的情况
-        int error_rows = tbmodel_grammar_process.getRowCount();
+        int grammar_rows = tbmodel_grammar_process.getRowCount();
         int result_rows = tbmodel_lex_result.getRowCount();
         int triples_rows = tbmodel_triples.getRowCount();
         int symbols_rows = tbmodel_symbol_list.getRowCount();
-        for (int i = 0; i < error_rows; i++) {
+        int error_rows = tbmodel_error.getRowCount();
+        for (int i = 0; i < grammar_rows; i++) {
             tbmodel_grammar_process.removeRow(0);
             tb_lex_error.updateUI();
         }
@@ -284,6 +287,11 @@ public class Gui extends JFrame implements ActionListener {
         for (int i = 0; i < symbols_rows; i++) {
             tbmodel_symbol_list.removeRow(0);
             tb_symbol_list.updateUI();
+        }
+
+        for (int i = 0; i < error_rows; i++) {
+            tbmodel_error.removeRow(0);
+            tb_error.updateUI();
         }
 
     }
@@ -307,6 +315,12 @@ public class Gui extends JFrame implements ActionListener {
     public void addSyntactic(List<String> derives, DefaultTableModel tbmodel) {
         for (String derive : derives) {
             tbmodel.addRow(new String[] { derive });
+        }
+    }
+
+    public void addErrorTable(List<String> errorMessages, DefaultTableModel tbmodel) {
+        for (String error : errorMessages) {
+            tbmodel.addRow(new String[] { error });
         }
     }
 

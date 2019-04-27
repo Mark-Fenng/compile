@@ -51,14 +51,16 @@ public class AST {
             type1 = root.getType();
             type2 = root.getChildren().get(0).getToken().getType();
             if (!type1.equals(type2)) {
-                System.out.println(
-                        "Can't assign value to constant Line:" + root.getChildren().get(0).getToken().getLineNumber());
+                Semantics.addErrorMessage("Error at Line: " + root.getChildren().get(0).getToken().getLineNumber()
+                        + " [Can't assign value to constant]");
             }
             break;
         case 2: // primary_expression:IDENTIFIER
             root.getChildren().get(0).setType(root.getType());
             variable = Semantics.getVariable(root.getChildren().get(0).getToken().getOriginWord());
-            variable.setType(root.getType());
+            if (variable != null) {
+                variable.setType(root.getType());
+            }
             break;
         case 3: // primary_expression:L_PAREN expression R_PAREN
             break;
@@ -339,7 +341,13 @@ public class AST {
                         break;
                     case 2: // primary_expression:IDENTIFIER
                         variable = Semantics.getVariable(root.getChildren().get(0).getToken().getOriginWord());
-                        root.setType(variable.getType());
+                        if (variable == null) {
+                            Semantics.addErrorMessage("Error at Line: "
+                                    + root.getChildren().get(0).getToken().getLineNumber() + " [The variable "
+                                    + root.getChildren().get(0).getToken().getOriginWord() + " has not been declared]");
+                        } else {
+                            root.setType(variable.getType());
+                        }
                         break;
                     case 3: // primary_expression:L_PAREN expression R_PAREN
                         root.setType(root.getChildren().get(1).getToken().getType());
@@ -360,8 +368,9 @@ public class AST {
                         break;
                     case 9: // unary_expression:NOT postfix_expression
                         if (!root.getChildren().get(1).getType().equals("boolean")) {
-                            System.out.println("Not operator can't be used to other type Line:"
-                                    + root.getChildren().get(0).getToken().getLineNumber());
+                            Semantics.addErrorMessage(
+                                    "Error at Line: " + root.getChildren().get(0).getToken().getLineNumber()
+                                            + " [Not operator can't be used to other type]");
                         } else {
                             root.setType("boolean");
                         }
@@ -369,8 +378,9 @@ public class AST {
                     case 10: // unary_expression:SUB postfix_expression
                         if (!root.getChildren().get(1).getType().equals("integer")
                                 && !root.getChildren().get(1).getType().equals("float")) {
-                            System.out.println("Sub operator can't be used to other type Line:"
-                                    + root.getChildren().get(0).getToken().getLineNumber());
+                            Semantics.addErrorMessage(
+                                    "Error at Line: " + root.getChildren().get(0).getToken().getLineNumber()
+                                            + " [Sub operator can't be used to other type]");
                         } else {
                             root.setType(root.getChildren().get(1).getType());
                         }
@@ -383,8 +393,9 @@ public class AST {
                         type2 = root.getChildren().get(2).getType();
                         if ((!type1.equals("integer") && !type1.equals("float"))
                                 || (!type2.equals("integer") && !type2.equals("float"))) {
-                            System.out.println("Multiply operator can't be used to other type Line:"
-                                    + root.getChildren().get(1).getToken().getLineNumber());
+                            Semantics.addErrorMessage(
+                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
+                                            + " [Multiply operator can't be used to other type]");
                         } else {
                             root.setType(type1.equals(type2) ? type1 : "float");
                         }
@@ -394,8 +405,9 @@ public class AST {
                         type2 = root.getChildren().get(2).getType();
                         if ((!type1.equals("integer") && !type1.equals("float"))
                                 || (!type2.equals("integer") && !type2.equals("float"))) {
-                            System.out.println("Division operator can't be used to other type Line:"
-                                    + root.getChildren().get(1).getToken().getLineNumber());
+                            Semantics.addErrorMessage(
+                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
+                                            + " [Division operator can't be used to other type]");
                         } else {
                             root.setType(type1.equals(type2) ? type1 : "float");
                         }
@@ -404,8 +416,9 @@ public class AST {
                         type1 = root.getChildren().get(0).getType();
                         type2 = root.getChildren().get(2).getType();
                         if (!type1.equals("integer") && !type2.equals("integer")) {
-                            System.out.println("Modulo operator can't be used to other type Line:"
-                                    + root.getChildren().get(1).getToken().getLineNumber());
+                            Semantics.addErrorMessage(
+                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
+                                            + " [Modulo operator can't be used to other type]");
                         } else {
                             root.setType(type1.equals(type2) ? type1 : "float");
                         }
@@ -418,8 +431,9 @@ public class AST {
                         type2 = root.getChildren().get(2).getType();
                         if ((!type1.equals("integer") && !type1.equals("float"))
                                 || (!type2.equals("integer") && !type2.equals("float"))) {
-                            System.out.println("Add operator can't be used to other type Line:"
-                                    + root.getChildren().get(1).getToken().getLineNumber());
+                            Semantics.addErrorMessage(
+                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
+                                            + " [Add operator can't be used to other type]");
                         } else {
                             root.setType(type1.equals(type2) ? type1 : "float");
                         }
@@ -429,8 +443,9 @@ public class AST {
                         type2 = root.getChildren().get(2).getType();
                         if ((!type1.equals("integer") && !type1.equals("float"))
                                 || (!type2.equals("integer") && !type2.equals("float"))) {
-                            System.out.println("Sub operator can't be used to other type Line:"
-                                    + root.getChildren().get(1).getToken().getLineNumber());
+                            Semantics.addErrorMessage(
+                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
+                                            + " [Sub operator can't be used to other type]");
                         } else {
                             root.setType(type1.equals(type2) ? type1 : "float");
                         }
@@ -443,8 +458,9 @@ public class AST {
                         type2 = root.getChildren().get(2).getType();
                         if ((!type1.equals("integer") && !type1.equals("float"))
                                 || (!type2.equals("integer") && !type2.equals("float"))) {
-                            System.out.println("< operator can't be used to other type Line:"
-                                    + root.getChildren().get(1).getToken().getLineNumber());
+                            Semantics.addErrorMessage(
+                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
+                                            + " [< operator can't be used to other type]");
                         } else {
                             root.setType("boolean");
                         }
@@ -454,8 +470,9 @@ public class AST {
                         type2 = root.getChildren().get(2).getType();
                         if ((!type1.equals("integer") && !type1.equals("float"))
                                 || (!type2.equals("integer") && !type2.equals("float"))) {
-                            System.out.println("> operator can't be used to other type Line:"
-                                    + root.getChildren().get(1).getToken().getLineNumber());
+                            Semantics.addErrorMessage(
+                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
+                                            + " [> operator can't be used to other type]");
                         } else {
                             root.setType("boolean");
                         }
@@ -465,8 +482,9 @@ public class AST {
                         type2 = root.getChildren().get(2).getType();
                         if ((!type1.equals("integer") && !type1.equals("float"))
                                 || (!type2.equals("integer") && !type2.equals("float"))) {
-                            System.out.println("<= operator can't be used to other type Line:"
-                                    + root.getChildren().get(1).getToken().getLineNumber());
+                            Semantics.addErrorMessage(
+                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
+                                            + " [<= operator can't be used to other type]");
                         } else {
                             root.setType("boolean");
                         }
@@ -476,8 +494,9 @@ public class AST {
                         type2 = root.getChildren().get(2).getType();
                         if ((!type1.equals("integer") && !type1.equals("float"))
                                 || (!type2.equals("integer") && !type2.equals("float"))) {
-                            System.out.println(">= operator can't be used to other type Line:"
-                                    + root.getChildren().get(1).getToken().getLineNumber());
+                            Semantics.addErrorMessage(
+                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
+                                            + " [>= operator can't be used to other type]");
                         } else {
                             root.setType("boolean");
                         }
@@ -490,8 +509,9 @@ public class AST {
                         type2 = root.getChildren().get(2).getType();
                         if ((!type1.equals("integer") && !type1.equals("float"))
                                 || (!type2.equals("integer") && !type2.equals("float"))) {
-                            System.out.println("== operator can't be used to other type Line:"
-                                    + root.getChildren().get(1).getToken().getLineNumber());
+                            Semantics.addErrorMessage(
+                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
+                                            + " [== operator can't be used to other type]");
                         } else {
                             root.setType("boolean");
                         }
@@ -501,8 +521,9 @@ public class AST {
                         type2 = root.getChildren().get(2).getType();
                         if ((!type1.equals("integer") && !type1.equals("float"))
                                 || (!type2.equals("integer") && !type2.equals("float"))) {
-                            System.out.println("!= operator can't be used to other type Line:"
-                                    + root.getChildren().get(1).getToken().getLineNumber());
+                            Semantics.addErrorMessage(
+                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
+                                            + " [!= operator can't be used to other type]");
                         } else {
                             root.setType("boolean");
                         }
@@ -515,8 +536,9 @@ public class AST {
                         type2 = root.getChildren().get(2).getType();
                         if ((!type1.equals("integer") && !type1.equals("float"))
                                 || (!type2.equals("integer") && !type2.equals("float"))) {
-                            System.out.println("And operator can't be used to other type Line:"
-                                    + root.getChildren().get(1).getToken().getLineNumber());
+                            Semantics.addErrorMessage(
+                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
+                                            + " [And operator can't be used to other type]");
                         } else {
                             root.setType("boolean");
                         }
@@ -529,8 +551,9 @@ public class AST {
                         type2 = root.getChildren().get(2).getType();
                         if ((!type1.equals("integer") && !type1.equals("float"))
                                 || (!type2.equals("integer") && !type2.equals("float"))) {
-                            System.out.println("Or operator can't be used to other type Line:"
-                                    + root.getChildren().get(1).getToken().getLineNumber());
+                            Semantics.addErrorMessage(
+                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
+                                            + " [Or operator can't be used to other type]");
                         } else {
                             root.setType("boolean");
                         }
@@ -543,8 +566,9 @@ public class AST {
                         type1 = root.getChildren().get(0).getType();
                         type2 = root.getChildren().get(2).getType();
                         if (!numType.contains(type1) && !numType.contains(type2)) {
-                            System.out.println("Assign operator can't be used to other type Line:"
-                                    + root.getChildren().get(1).getToken().getLineNumber());
+                            Semantics.addErrorMessage(
+                                    "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber()
+                                            + " [Assign operator can't be used to other type]");
                         } else {
                             root.getChildren().get(0).setType(root.getChildren().get(2).getType());
                             root.setType(root.getChildren().get(0).getType());
@@ -589,8 +613,10 @@ public class AST {
                         variable = new Variable(root.getChildren().get(0).getToken().getOriginWord(), "", null, 4, 0);
                         index = Semantics.addVariable(variable);
                         if (index == -1) {
-                            System.out.println("Variable has been declared before Line:"
-                                    + root.getChildren().get(0).getToken().getLineNumber());
+                            Semantics.addErrorMessage(
+                                    "Error at Line: " + root.getChildren().get(0).getToken().getLineNumber()
+                                            + " [Variable " + root.getChildren().get(0).getToken().getOriginWord()
+                                            + " has been declared before]");
                         }
                         variable.setOffset(index * 4);
                         break;
@@ -600,8 +626,9 @@ public class AST {
                                 root.getChildren().get(2).getToken().getOriginWord(), 4, 0);
                         index = Semantics.addVariable(variable);
                         if (index == -1) {
-                            System.out.println("Variable has been declared before Line:"
-                                    + root.getChildren().get(0).getToken().getLineNumber());
+                            Semantics.addErrorMessage(
+                                    "Error at Line: " + root.getChildren().get(0).getToken().getLineNumber()
+                                            + " [Variable has been declared before]");
                         }
                         variable.setOffset(index * 4);
                         break;

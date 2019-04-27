@@ -4,4 +4,6 @@ num=true;
 
 
 val bool1 = false,int1 = 3,float1 = 3.5;
-bool1=int1+float1;
+bool1 = false + int1;
+bool2 = false;
+val bool1;

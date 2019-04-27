@@ -5,9 +5,10 @@ import Lexer.*;
 import Grammar.*;
 
 public class Semantics {
+    private static List<String> errorMessage = new ArrayList<>();
     private static List<Variable> variableTable = new ArrayList<>();
-    private List<Triad> triadTable = new ArrayList<>();
-    private List<Quad> quadTable = new ArrayList<>();
+    private static List<Triad> triadTable = new ArrayList<>();
+    private static List<Quad> quadTable = new ArrayList<>();
 
     public void action(Formula formula, List<Token> tokenList) {
         System.out.println(formula + " " + tokenList.toString());
@@ -38,7 +39,19 @@ public class Semantics {
         return variableTable;
     }
 
+    public static void addErrorMessage(String err) {
+        errorMessage.add(err);
+    }
+
+    /**
+     * @return the errorMessage
+     */
+    public static List<String> getErrorMessage() {
+        return errorMessage;
+    }
+
     public static void clearAll() {
         variableTable = new ArrayList<>();
+        errorMessage = new ArrayList<>();
     }
 }
