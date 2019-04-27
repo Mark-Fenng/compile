@@ -48,12 +48,22 @@ public class AST {
         case 0:
             break;
         case 1: // primary_expression:CONSTANT
+            type1 = root.getType();
+            type2 = root.getChildren().get(0).getToken().getType();
+            if (!type1.equals(type2)) {
+                System.out.println(
+                        "Can't assign value to constant Line:" + root.getChildren().get(0).getToken().getLineNumber());
+            }
             break;
-        case 2:
+        case 2: // primary_expression:IDENTIFIER
+            root.getChildren().get(0).setType(root.getType());
+            variable = Semantics.getVariable(root.getChildren().get(0).getToken().getOriginWord());
+            variable.setType(root.getType());
             break;
         case 3: // primary_expression:L_PAREN expression R_PAREN
             break;
         case 4: // postfix_expression:primary_expression
+            root.getChildren().get(0).setType(root.getType());
             break;
         case 5: // postfix_expression:postfix_expression L_BRACK expression R_BRACK
             break;
@@ -327,7 +337,7 @@ public class AST {
                         root.getChildren().get(0).setType(root.getChildren().get(0).getToken().getType());
                         root.setType(root.getChildren().get(0).getToken().getType());
                         break;
-                    case 2:
+                    case 2: // primary_expression:IDENTIFIER
                         variable = Semantics.getVariable(root.getChildren().get(0).getToken().getOriginWord());
                         root.setType(variable.getType());
                         break;
