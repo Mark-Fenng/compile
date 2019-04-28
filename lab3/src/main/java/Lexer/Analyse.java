@@ -118,12 +118,14 @@ public class Analyse {
 
     String getComment() throws Exception {
         String comment = "";
+        index += 2;
         while (index + 1 < content.length() && !(getChar(index) == '*' || getChar(index + 1) == '/')) {
             comment += getChar(index);
             index += 1;
         }
         if (index + 1 == content.length())
             throw new Exception("Wrong comment");
+        index += 2;
         return comment;
     }
 

@@ -1,3 +1,4 @@
+/*this is comment*/
 val bool1 = false,int1 = 3,float1 = 3.5;
 val num;
 num=true;
@@ -10,3 +11,15 @@ while(int1==3&float1>3.5){
         num=int1;
     }
 }
+/*val bool1 = false,int1 = 3,float1 = 3.5;
+val num;
+num=true;
+num=int1+float1;
+while(int1==3&float1>3.5){
+    float1 =float1 + 1;
+    if(int1>3){
+        num=int1+float1;
+    }else{
+        num=int1;
+    }
+}*/

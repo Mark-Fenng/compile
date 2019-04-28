@@ -65,6 +65,10 @@ public class AST {
         stateStack.push(0);
         while (true) {
             Node symbol = new Node(analyse.getTokenList().get(top));
+            if (symbol.getToken().getType().equals("comment")) {
+                top += 1;
+                continue;
+            }
             if (LR1.actionTable.get(stateStack.peek()).containsKey(symbol.getToken().getTokenValue())) {
                 String action = LR1.actionTable.get(stateStack.peek()).get(symbol.getToken().getTokenValue());
                 String actionType = String.valueOf(action.charAt(0));
