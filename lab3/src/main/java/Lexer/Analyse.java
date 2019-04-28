@@ -25,7 +25,7 @@ public class Analyse {
                 "R_BRACK", "L_CURLY", "R_CURLY"));
         operators.setWordList(
                 Arrays.asList("+", "-", "*", "/", "!=", " !", "&", "|", "==", ">=", ">", "<=", "<", "&&", "||"));
-        operatorTokens.setWordList(Arrays.asList("ADD", "SUB", "MUL", "DIV", "ENQ", "NOT", "AND", "OR", "EQ", "GE",
+        operatorTokens.setWordList(Arrays.asList("ADD", "SUB", "MUL", "DIV", "NEQ", "NOT", "AND", "OR", "EQ", "GE",
                 "GT", "LE", "LT", "DA", "DO"));
         this.content = content;
 
@@ -72,11 +72,12 @@ public class Analyse {
                     }
                     String operator = getOperator();
                     if (!operator.equals("")) {
-                        tokenList.add(new Token("operator", operator,
-                                operators.getWordList().indexOf(String.valueOf(operator)),
-                                operatorTokens.getWordList()
-                                        .get(operators.getWordList().indexOf(String.valueOf(String.valueOf(operator)))),
-                                lineNumber));
+                        tokenList
+                                .add(new Token("operator", operator,
+                                        operators.getWordList().indexOf(String.valueOf(operator)),
+                                        operatorTokens.getWordList()
+                                                .get(operators.getWordList().indexOf(String.valueOf(operator))),
+                                        lineNumber));
                     }
                 }
             }
@@ -146,7 +147,7 @@ public class Analyse {
             index += 1;
             break;
         case '!':
-            if (index + 1 < content.length() && getChar(index) == '=') {
+            if (index + 1 < content.length() && getChar(index + 1) == '=') {
                 operator += "!=";
                 index += 1;
             } else
@@ -154,7 +155,7 @@ public class Analyse {
             index += 1;
             break;
         case '&':
-            if (index + 1 < content.length() && getChar(index) == '&') {
+            if (index + 1 < content.length() && getChar(index + 1) == '&') {
                 operator += "&&";
                 index += 1;
             } else {
@@ -163,7 +164,7 @@ public class Analyse {
             index += 1;
             break;
         case '|':
-            if (index + 1 < content.length() && getChar(index) == '|') {
+            if (index + 1 < content.length() && getChar(index + 1) == '|') {
                 operator += "||";
                 index += 1;
             } else {
@@ -172,14 +173,14 @@ public class Analyse {
             index += 1;
             break;
         case '=':
-            if (index + 1 < content.length() && getChar(index) == '=') {
+            if (index + 1 < content.length() && getChar(index + 1) == '=') {
                 operator += "==";
                 index += 1;
             }
             index += 1;
             break;
         case '>':
-            if (index + 1 < content.length() && getChar(index) == '=') {
+            if (index + 1 < content.length() && getChar(index + 1) == '=') {
                 operator += ">=";
                 index += 1;
             } else {
@@ -188,7 +189,7 @@ public class Analyse {
             index += 1;
             break;
         case '<':
-            if (index + 1 < content.length() && getChar(index) == '=') {
+            if (index + 1 < content.length() && getChar(index + 1) == '=') {
                 operator += "<=";
                 index += 1;
             } else {

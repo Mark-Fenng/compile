@@ -13,6 +13,20 @@ public class Quad {
         this.result = result;
     }
 
+    /**
+     * @return the result
+     */
+    public Token getResult() {
+        return result;
+    }
+
+    /**
+     * @return the operator
+     */
+    public String getOperator() {
+        return operator;
+    }
+
     @Override
     public String toString() {
 
@@ -43,6 +57,8 @@ public class Quad {
             return "if " + v1.getOriginWord() + " goto " + result.getOriginWord();
         case "goto":
             return "goto " + result.getOriginWord();
+        case "end":
+            return "end";
         default:
             return "";
         }

@@ -22,6 +22,7 @@ public class AST {
 
     public AST(Analyse analyse) throws Exception {
         generateAST(analyse);
+        Semantics.generateCodes(this);
     }
 
     /**
@@ -36,219 +37,6 @@ public class AST {
      */
     public void setRoot(Node root) {
         this.root = root;
-    }
-
-    public void dfs(Node root) {
-        int formulaIndex = -1;
-        if (root != null && root.hasChildren()) {
-            formulaIndex = LR1.grammars.indexOf(getFormula(root, root.getChildren()));
-        }
-        int index;
-        Variable variable;
-        String type1, type2, operator;
-        Quad quad;
-        Token tempToken;
-        switch (formulaIndex) {
-        case 0:
-            break;
-        case 1: // primary_expression:CONSTANT
-            break;
-        case 2: // primary_expression:IDENTIFIER
-            break;
-        case 3: // primary_expression:L_PAREN expression R_PAREN
-            break;
-        case 4: // postfix_expression:primary_expression
-            break;
-        case 5: // postfix_expression:postfix_expression L_BRACK expression R_BRACK
-            break;
-        case 6: // postfix_expression:postfix_expression L_PAREN R_PAREN
-            break;
-        case 7:
-            break;
-        case 8: // unary_expression:postfix_expression
-            break;
-        case 9: // unary_expression:NOT postfix_expression
-            break;
-        case 10: // unary_expression:SUB postfix_expression
-            break;
-        case 11: // multiplicative_expression:unary_expression
-            break;
-        case 12: // multiplicative_expression:multiplicative_expression MUL postfix_expression
-            break;
-        case 13: // multiplicative_expression:multiplicative_expression DIV postfix_expression
-            break;
-        case 14: // multiplicative_expression:multiplicative_expression MOD postfix_expression
-            break;
-        case 15: // additive_expression:multiplicative_expression
-            break;
-        case 16: // additive_expression:additive_expression ADD multiplicative_expression
-            break;
-        case 17: // additive_expression:additive_expression SUB multiplicative_expression
-            break;
-        case 18: // relational_expression:additive_expression
-            break;
-        case 19: // relational_expression:relational_expression LT additive_expression
-            break;
-        case 20: // relational_expression:relational_expression GT additive_expression
-            break;
-        case 21: // relational_expression:relational_expression LE additive_expression
-            break;
-        case 22: // relational_expression:relational_expression GE additive_expression
-            break;
-        case 23: // equality_expression:relational_expression
-            break;
-        case 24: // equality_expression:equality_expression EQ relational_expression
-            break;
-        case 25: // equality_expression:equality_expression NEQ relational_expression
-            break;
-        case 26: // logical_and_expression:equality_expression
-            break;
-        case 27: // logical_and_expression:logical_and_expression AND equality_expression
-            break;
-        case 28: // logical_or_expression:logical_and_expression
-            break;
-        case 29: // logical_or_expression:logical_or_expression OR logical_and_expression
-            break;
-        case 30: // assignment_expression:logical_or_expression
-            break;
-        case 31: // assignment_expression:postfix_expression assignment_operator
-                 // assignment_expression
-            break;
-        case 32: // argument_expression_list:assignment_expression
-            break;
-        case 33:
-            break;
-        case 34: // argument_expression_list:assignment_expression
-            break;
-        case 35:
-            break;
-        case 36:
-            break;
-        case 37:
-            break;
-        case 38:
-            break;
-        case 39:
-            break;
-        case 40:
-            break;
-        case 41:
-            break;
-        case 42:
-            break;
-        case 43:
-            break;
-        case 44:
-            break;
-        case 45: // declaration:VAL init_declarator_list SEMICOLON
-
-            break;
-        case 46:
-            break;
-        case 47:
-            break;
-        case 48: // init_declarator:IDENTIFIER
-            break;
-        case 49: // init_declarator:IDENTIFIER ASSIGN initializer
-            break;
-        case 50: // identifier_list:IDENTIFIER
-
-            break;
-        case 51:
-            break;
-        case 52: // initializer:assignment_expression
-            break;
-        case 53:
-            break;
-        case 54:
-            break;
-        case 55:
-            break;
-        case 56:
-            break;
-        case 57:
-            break;
-        case 58:
-            break;
-        case 59:
-            break;
-        case 60:
-            break;
-        case 61:
-            break;
-        case 62:
-            break;
-        case 63:
-            break;
-        case 64:
-            break;
-        case 65:
-            break;
-        case 66:
-            break;
-        case 67:
-            break;
-        case 68:
-            break;
-        case 69:
-            break;
-        case 70:
-            break;
-        case 71:
-            break;
-        case 72:
-            break;
-        case 73:
-            break;
-        case 74:
-            break;
-        case 75:
-            break;
-        case 76:
-            break;
-        case 77:
-            break;
-        case 78:
-            break;
-        case 79:
-            break;
-        case 80:
-            break;
-        case 81:
-            break;
-        case 82:
-            break;
-        case 83:
-            break;
-        case 84:
-            break;
-        case 85:
-            break;
-        case 86:
-            break;
-        case 87:
-            break;
-        case 88:
-            break;
-        case 89:
-            break;
-        case 90:
-            break;
-        case 91:
-            break;
-        case 92:
-            break;
-        case 93:
-            break;
-        case 94:
-            break;
-        default:
-            break;
-        }
-        for (Node node : root.getChildren()) {
-            dfs(node);
-        }
-
     }
 
     public Formula getFormula(Node parent, List<Node> children) {
@@ -757,7 +545,7 @@ public class AST {
                         operator = "&";
                         type1 = root.getChildren().get(0).getType();
                         type2 = root.getChildren().get(2).getType();
-                        if ((!type1.equals("integer") && !type1.equals("float"))
+                        if ((!type1.equals("") && !type1.equals("float"))
                                 || (!type2.equals("integer") && !type2.equals("float"))) {
                             Semantics.addErrorMessage(
                                     "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber() + " ["
@@ -943,25 +731,28 @@ public class AST {
                         break;
                     case 57:
                         break;
-                    case 58:
-                        break;
+                    case 58: // statement:compound_statement
                     case 59: // statement:expression_statement
-                        root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
-                        break;
-                    case 60:
-                        break;
-                    case 61:
-                        break;
-                    case 62:
-                        break;
+                    case 60: // statement:selection_statement
+                    case 61: // statement:iteration_statement
+                    case 62: // statement:jump_statement
                     case 63: // statement_block:statement
+                    case 64: // statement_block:declaration
                         root.getAttributes().putAll(root.getChildren().get(0).getAttributes());
                         break;
-                    case 64:
+                    case 65: // statement_block:statement_block statement
+                        root.getAttributes().put("codes", new ArrayList<Quad>());
+                        if (root.getChildren().get(0).getCodes() != null)
+                            root.getCodes().addAll(root.getChildren().get(0).getCodes());
+                        if (root.getChildren().get(1).getCodes() != null)
+                            root.getCodes().addAll(root.getChildren().get(1).getCodes());
                         break;
-                    case 65:
-                        break;
-                    case 66:
+                    case 66: // statement_block:statement_block declaration
+                        root.getAttributes().put("codes", new ArrayList<Quad>());
+                        if (root.getChildren().get(0).getCodes() != null)
+                            root.getCodes().addAll(root.getChildren().get(0).getCodes());
+                        if (root.getChildren().get(1).getCodes() != null)
+                            root.getCodes().addAll(root.getChildren().get(1).getCodes());
                         break;
                     case 67:
                         break;
@@ -1024,7 +815,30 @@ public class AST {
                         break;
                     case 76:
                         break;
-                    case 77:
+                    case 77: // iteration_statement:WHILE L_PAREN expression R_PAREN compound_statement
+                        // while goto +2
+                        tempToken = new Token("goto", String.valueOf(2), 0, "", -1);
+                        // generate code
+                        quad = new Quad("if", root.getChildren().get(2).getSymbol(), null, tempToken);
+                        root.getAttributes().put("codes", new ArrayList<Quad>());
+                        if (root.getChildren().get(2).getCodes() != null)
+                            root.getCodes().addAll(root.getChildren().get(2).getCodes());
+                        root.getCodes().add(quad);
+                        if (root.getChildren().get(4).getCodes() != null) {
+                            // while not goto size + 2
+                            tempToken = new Token("goto",
+                                    String.valueOf(root.getChildren().get(4).getCodes().size() + 2), 0, "", -1);
+                            quad = new Quad("goto", null, null, tempToken);
+                            root.getCodes().add(quad);
+                            root.getCodes().addAll(root.getChildren().get(4).getCodes());
+                            // goto while condition
+                            tempToken = new Token("goto",
+                                    "-" + String.valueOf(root.getChildren().get(2).getCodes().size()
+                                            + root.getChildren().get(4).getCodes().size() + 2),
+                                    0, "", -1);
+                            quad = new Quad("goto", null, null, tempToken);
+                            root.getCodes().add(quad);
+                        }
                         break;
                     case 78:
                         break;

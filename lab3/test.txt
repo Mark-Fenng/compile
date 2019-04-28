@@ -1,19 +1,4 @@
 val bool1 = false,int1 = 3,float1 = 3.5;
-val num;
-num=true;
-num=int1+float1;
-if(int1>3){
-    num=int1+float1;
-}
-
-val int1 = 3,float1 = 3.5;
-val num;
-while(int1>3){
-    float1 =3.6;
-}
-
-
-val bool1 = false,int1 = 3,float1 = 3.5;
 bool1 = false + int1;
 bool2 = false;
 val bool1;

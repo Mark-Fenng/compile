@@ -72,6 +72,24 @@ public class Semantics {
         return tempVariableTable;
     }
 
+    public static void generateCodes(AST ast) {
+        if (ast.getRoot() != null && ast.getRoot().getCodes() != null) {
+            List<Quad> quads = ast.getRoot().getCodes();
+            quads.add(new Quad("end", null, null, null));
+            Quad quadTemp;
+            int i;
+            for (i = 0; i < quads.size(); i++) {
+                quadTemp = quads.get(i);
+                if (quadTemp.getOperator().equals("if") || quadTemp.getOperator().equals("goto")) {
+                    int num = Integer.parseInt(quadTemp.getResult().getOriginWord());
+                    quadTemp.getResult().setOriginWord(String.valueOf(num + i));
+                }
+                quadTable.add(quadTemp);
+            }
+        }
+
+    }
+
     public static void clearAll() {
         variableTable = new ArrayList<>();
         errorMessage = new ArrayList<>();

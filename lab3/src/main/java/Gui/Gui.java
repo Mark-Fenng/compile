@@ -211,12 +211,9 @@ public class Gui extends JFrame implements ActionListener {
                 try {
                     AST ast = new AST(analyse);
                     addSyntactic(ast.getProcessMessage(), tbmodel_grammar_process);
-                    ast.dfs(ast.getRoot());
                     addSymbolTable(Semantics.getVariableTable(), tbmodel_symbol_list);
                     addErrorTable(Semantics.getErrorMessage(), tbmodel_error);
-                    // addTriple(Semantics.getQuadTable(), tbmodel_triples);
-                    if (ast.getRoot().getCodes() != null)
-                        addTriple(ast.getRoot().getCodes(), tbmodel_triples);
+                    addTriple(Semantics.getQuadTable(), tbmodel_triples);
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
