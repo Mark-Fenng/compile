@@ -545,8 +545,7 @@ public class AST {
                         operator = "&";
                         type1 = root.getChildren().get(0).getType();
                         type2 = root.getChildren().get(2).getType();
-                        if ((!type1.equals("") && !type1.equals("float"))
-                                || (!type2.equals("integer") && !type2.equals("float"))) {
+                        if (!type1.equals("boolean") || !type2.equals("boolean")) {
                             Semantics.addErrorMessage(
                                     "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber() + " ["
                                             + operator + " operator can't be used to other type]");
@@ -578,8 +577,7 @@ public class AST {
                         operator = "|";
                         type1 = root.getChildren().get(0).getType();
                         type2 = root.getChildren().get(2).getType();
-                        if ((!type1.equals("integer") && !type1.equals("float"))
-                                || (!type2.equals("integer") && !type2.equals("float"))) {
+                        if (!type1.equals("boolean") || !type2.equals("boolean")) {
                             Semantics.addErrorMessage(
                                     "Error at Line: " + root.getChildren().get(1).getToken().getLineNumber() + " ["
                                             + operator + " operator can't be used to other type]");
