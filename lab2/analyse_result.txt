@@ -1,0 +1,924 @@
+Action s1
+[#, VAL]
+[0, 1]
+
+declaration_specifiers:VAL
+Action r46
+[#, declaration_specifiers]
+[0]
+
+goto(0,declaration_specifiers)
+[#, declaration_specifiers]
+[0, 28]
+
+Action s80
+[#, declaration_specifiers, IDENTIFIER]
+[0, 28, 80]
+
+Action s152
+[#, declaration_specifiers, IDENTIFIER, ASSIGN]
+[0, 28, 80, 152]
+
+Action s10
+[#, declaration_specifiers, IDENTIFIER, ASSIGN, CONSTANT]
+[0, 28, 80, 152, 10]
+
+primary_expression:CONSTANT
+Action r2
+[#, declaration_specifiers, IDENTIFIER, ASSIGN, primary_expression]
+[0, 28, 80, 152]
+
+goto(152,primary_expression)
+[#, declaration_specifiers, IDENTIFIER, ASSIGN, primary_expression]
+[0, 28, 80, 152, 22]
+
+postfix_expression:primary_expression
+Action r4
+[#, declaration_specifiers, IDENTIFIER, ASSIGN, postfix_expression]
+[0, 28, 80, 152]
+
+goto(152,postfix_expression)
+[#, declaration_specifiers, IDENTIFIER, ASSIGN, postfix_expression]
+[0, 28, 80, 152, 14]
+
+unary_expression:postfix_expression
+Action r8
+[#, declaration_specifiers, IDENTIFIER, ASSIGN, unary_expression]
+[0, 28, 80, 152]
+
+goto(152,unary_expression)
+[#, declaration_specifiers, IDENTIFIER, ASSIGN, unary_expression]
+[0, 28, 80, 152, 16]
+
+multiplicative_expression:unary_expression
+Action r11
+[#, declaration_specifiers, IDENTIFIER, ASSIGN, multiplicative_expression]
+[0, 28, 80, 152]
+
+goto(152,multiplicative_expression)
+[#, declaration_specifiers, IDENTIFIER, ASSIGN, multiplicative_expression]
+[0, 28, 80, 152, 21]
+
+additive_expression:multiplicative_expression
+Action r15
+[#, declaration_specifiers, IDENTIFIER, ASSIGN, additive_expression]
+[0, 28, 80, 152]
+
+goto(152,additive_expression)
+[#, declaration_specifiers, IDENTIFIER, ASSIGN, additive_expression]
+[0, 28, 80, 152, 20]
+
+relational_expression:additive_expression
+Action r18
+[#, declaration_specifiers, IDENTIFIER, ASSIGN, relational_expression]
+[0, 28, 80, 152]
+
+goto(152,relational_expression)
+[#, declaration_specifiers, IDENTIFIER, ASSIGN, relational_expression]
+[0, 28, 80, 152, 30]
+
+equality_expression:relational_expression
+Action r23
+[#, declaration_specifiers, IDENTIFIER, ASSIGN, equality_expression]
+[0, 28, 80, 152]
+
+goto(152,equality_expression)
+[#, declaration_specifiers, IDENTIFIER, ASSIGN, equality_expression]
+[0, 28, 80, 152, 13]
+
+logical_and_expression:equality_expression
+Action r26
+[#, declaration_specifiers, IDENTIFIER, ASSIGN, logical_and_expression]
+[0, 28, 80, 152]
+
+goto(152,logical_and_expression)
+[#, declaration_specifiers, IDENTIFIER, ASSIGN, logical_and_expression]
+[0, 28, 80, 152, 29]
+
+logical_or_expression:logical_and_expression
+Action r28
+[#, declaration_specifiers, IDENTIFIER, ASSIGN, logical_or_expression]
+[0, 28, 80, 152]
+
+goto(152,logical_or_expression)
+[#, declaration_specifiers, IDENTIFIER, ASSIGN, logical_or_expression]
+[0, 28, 80, 152, 17]
+
+assignment_expression:logical_or_expression
+Action r30
+[#, declaration_specifiers, IDENTIFIER, ASSIGN, assignment_expression]
+[0, 28, 80, 152]
+
+goto(152,assignment_expression)
+[#, declaration_specifiers, IDENTIFIER, ASSIGN, assignment_expression]
+[0, 28, 80, 152, 224]
+
+initializer:assignment_expression
+Action r53
+[#, declaration_specifiers, IDENTIFIER, ASSIGN, initializer]
+[0, 28, 80, 152]
+
+goto(152,initializer)
+[#, declaration_specifiers, IDENTIFIER, ASSIGN, initializer]
+[0, 28, 80, 152, 225]
+
+init_declarator:IDENTIFIER ASSIGN initializer
+Action r50
+[#, declaration_specifiers, init_declarator]
+[0, 28]
+
+goto(28,init_declarator)
+[#, declaration_specifiers, init_declarator]
+[0, 28, 81]
+
+init_declarator_list:init_declarator
+Action r47
+[#, declaration_specifiers, init_declarator_list]
+[0, 28]
+
+goto(28,init_declarator_list)
+[#, declaration_specifiers, init_declarator_list]
+[0, 28, 82]
+
+Action s153
+[#, declaration_specifiers, init_declarator_list, SEMICOLON]
+[0, 28, 82, 153]
+
+declaration:declaration_specifiers init_declarator_list SEMICOLON
+Action r44
+[#, declaration]
+[0]
+
+goto(0,declaration)
+[#, declaration]
+[0, 27]
+
+external_declaration:declaration
+Action r88
+[#, external_declaration]
+[0]
+
+goto(0,external_declaration)
+[#, external_declaration]
+[0, 23]
+
+translation_unit:external_declaration
+Action r85
+[#, translation_unit]
+[0]
+
+goto(0,translation_unit)
+[#, translation_unit]
+[0, 15]
+
+Action s6
+[#, translation_unit, IF]
+[0, 15, 6]
+
+Action s48
+[#, translation_unit, IF, L_PAREN]
+[0, 15, 6, 48]
+
+Action s33
+[#, translation_unit, IF, L_PAREN, IDENTIFIER]
+[0, 15, 6, 48, 33]
+
+primary_expression:IDENTIFIER
+Action r1
+[#, translation_unit, IF, L_PAREN, primary_expression]
+[0, 15, 6, 48]
+
+goto(48,primary_expression)
+[#, translation_unit, IF, L_PAREN, primary_expression]
+[0, 15, 6, 48, 43]
+
+postfix_expression:primary_expression
+Action r4
+[#, translation_unit, IF, L_PAREN, postfix_expression]
+[0, 15, 6, 48]
+
+goto(48,postfix_expression)
+[#, translation_unit, IF, L_PAREN, postfix_expression]
+[0, 15, 6, 48, 38]
+
+unary_expression:postfix_expression
+Action r8
+[#, translation_unit, IF, L_PAREN, unary_expression]
+[0, 15, 6, 48]
+
+goto(48,unary_expression)
+[#, translation_unit, IF, L_PAREN, unary_expression]
+[0, 15, 6, 48, 39]
+
+multiplicative_expression:unary_expression
+Action r11
+[#, translation_unit, IF, L_PAREN, multiplicative_expression]
+[0, 15, 6, 48]
+
+goto(48,multiplicative_expression)
+[#, translation_unit, IF, L_PAREN, multiplicative_expression]
+[0, 15, 6, 48, 42]
+
+additive_expression:multiplicative_expression
+Action r15
+[#, translation_unit, IF, L_PAREN, additive_expression]
+[0, 15, 6, 48]
+
+goto(48,additive_expression)
+[#, translation_unit, IF, L_PAREN, additive_expression]
+[0, 15, 6, 48, 41]
+
+relational_expression:additive_expression
+Action r18
+[#, translation_unit, IF, L_PAREN, relational_expression]
+[0, 15, 6, 48]
+
+goto(48,relational_expression)
+[#, translation_unit, IF, L_PAREN, relational_expression]
+[0, 15, 6, 48, 47]
+
+Action s111
+[#, translation_unit, IF, L_PAREN, relational_expression, GT]
+[0, 15, 6, 48, 47, 111]
+
+Action s91
+[#, translation_unit, IF, L_PAREN, relational_expression, GT, CONSTANT]
+[0, 15, 6, 48, 47, 111, 91]
+
+primary_expression:CONSTANT
+Action r2
+[#, translation_unit, IF, L_PAREN, relational_expression, GT, primary_expression]
+[0, 15, 6, 48, 47, 111]
+
+goto(111,primary_expression)
+[#, translation_unit, IF, L_PAREN, relational_expression, GT, primary_expression]
+[0, 15, 6, 48, 47, 111, 93]
+
+postfix_expression:primary_expression
+Action r4
+[#, translation_unit, IF, L_PAREN, relational_expression, GT, postfix_expression]
+[0, 15, 6, 48, 47, 111]
+
+goto(111,postfix_expression)
+[#, translation_unit, IF, L_PAREN, relational_expression, GT, postfix_expression]
+[0, 15, 6, 48, 47, 111, 164]
+
+unary_expression:postfix_expression
+Action r8
+[#, translation_unit, IF, L_PAREN, relational_expression, GT, unary_expression]
+[0, 15, 6, 48, 47, 111]
+
+goto(111,unary_expression)
+[#, translation_unit, IF, L_PAREN, relational_expression, GT, unary_expression]
+[0, 15, 6, 48, 47, 111, 39]
+
+multiplicative_expression:unary_expression
+Action r11
+[#, translation_unit, IF, L_PAREN, relational_expression, GT, multiplicative_expression]
+[0, 15, 6, 48, 47, 111]
+
+goto(111,multiplicative_expression)
+[#, translation_unit, IF, L_PAREN, relational_expression, GT, multiplicative_expression]
+[0, 15, 6, 48, 47, 111, 42]
+
+additive_expression:multiplicative_expression
+Action r15
+[#, translation_unit, IF, L_PAREN, relational_expression, GT, additive_expression]
+[0, 15, 6, 48, 47, 111]
+
+goto(111,additive_expression)
+[#, translation_unit, IF, L_PAREN, relational_expression, GT, additive_expression]
+[0, 15, 6, 48, 47, 111, 181]
+
+relational_expression:relational_expression GT additive_expression
+Action r20
+[#, translation_unit, IF, L_PAREN, relational_expression]
+[0, 15, 6, 48]
+
+goto(48,relational_expression)
+[#, translation_unit, IF, L_PAREN, relational_expression]
+[0, 15, 6, 48, 47]
+
+equality_expression:relational_expression
+Action r23
+[#, translation_unit, IF, L_PAREN, equality_expression]
+[0, 15, 6, 48]
+
+goto(48,equality_expression)
+[#, translation_unit, IF, L_PAREN, equality_expression]
+[0, 15, 6, 48, 37]
+
+logical_and_expression:equality_expression
+Action r26
+[#, translation_unit, IF, L_PAREN, logical_and_expression]
+[0, 15, 6, 48]
+
+goto(48,logical_and_expression)
+[#, translation_unit, IF, L_PAREN, logical_and_expression]
+[0, 15, 6, 48, 46]
+
+logical_or_expression:logical_and_expression
+Action r28
+[#, translation_unit, IF, L_PAREN, logical_or_expression]
+[0, 15, 6, 48]
+
+goto(48,logical_or_expression)
+[#, translation_unit, IF, L_PAREN, logical_or_expression]
+[0, 15, 6, 48, 40]
+
+assignment_expression:logical_or_expression
+Action r30
+[#, translation_unit, IF, L_PAREN, assignment_expression]
+[0, 15, 6, 48]
+
+goto(48,assignment_expression)
+[#, translation_unit, IF, L_PAREN, assignment_expression]
+[0, 15, 6, 48, 45]
+
+expression:assignment_expression
+Action r42
+[#, translation_unit, IF, L_PAREN, expression]
+[0, 15, 6, 48]
+
+goto(48,expression)
+[#, translation_unit, IF, L_PAREN, expression]
+[0, 15, 6, 48, 113]
+
+Action s183
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN]
+[0, 15, 6, 48, 113, 183]
+
+Action s233
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY]
+[0, 15, 6, 48, 113, 183, 233]
+
+Action s5
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, IDENTIFIER]
+[0, 15, 6, 48, 113, 183, 233, 5]
+
+primary_expression:IDENTIFIER
+Action r1
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, primary_expression]
+[0, 15, 6, 48, 113, 183, 233]
+
+goto(233,primary_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, primary_expression]
+[0, 15, 6, 48, 113, 183, 233, 22]
+
+postfix_expression:primary_expression
+Action r4
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression]
+[0, 15, 6, 48, 113, 183, 233]
+
+goto(233,postfix_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression]
+[0, 15, 6, 48, 113, 183, 233, 14]
+
+Action s62
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression, L_PAREN]
+[0, 15, 6, 48, 113, 183, 233, 14, 62]
+
+Action s33
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression, L_PAREN, IDENTIFIER]
+[0, 15, 6, 48, 113, 183, 233, 14, 62, 33]
+
+primary_expression:IDENTIFIER
+Action r1
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression, L_PAREN, primary_expression]
+[0, 15, 6, 48, 113, 183, 233, 14, 62]
+
+goto(62,primary_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression, L_PAREN, primary_expression]
+[0, 15, 6, 48, 113, 183, 233, 14, 62, 43]
+
+postfix_expression:primary_expression
+Action r4
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression, L_PAREN, postfix_expression]
+[0, 15, 6, 48, 113, 183, 233, 14, 62]
+
+goto(62,postfix_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression, L_PAREN, postfix_expression]
+[0, 15, 6, 48, 113, 183, 233, 14, 62, 38]
+
+unary_expression:postfix_expression
+Action r8
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression, L_PAREN, unary_expression]
+[0, 15, 6, 48, 113, 183, 233, 14, 62]
+
+goto(62,unary_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression, L_PAREN, unary_expression]
+[0, 15, 6, 48, 113, 183, 233, 14, 62, 39]
+
+multiplicative_expression:unary_expression
+Action r11
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression, L_PAREN, multiplicative_expression]
+[0, 15, 6, 48, 113, 183, 233, 14, 62]
+
+goto(62,multiplicative_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression, L_PAREN, multiplicative_expression]
+[0, 15, 6, 48, 113, 183, 233, 14, 62, 42]
+
+additive_expression:multiplicative_expression
+Action r15
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression, L_PAREN, additive_expression]
+[0, 15, 6, 48, 113, 183, 233, 14, 62]
+
+goto(62,additive_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression, L_PAREN, additive_expression]
+[0, 15, 6, 48, 113, 183, 233, 14, 62, 41]
+
+relational_expression:additive_expression
+Action r18
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression, L_PAREN, relational_expression]
+[0, 15, 6, 48, 113, 183, 233, 14, 62]
+
+goto(62,relational_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression, L_PAREN, relational_expression]
+[0, 15, 6, 48, 113, 183, 233, 14, 62, 47]
+
+equality_expression:relational_expression
+Action r23
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression, L_PAREN, equality_expression]
+[0, 15, 6, 48, 113, 183, 233, 14, 62]
+
+goto(62,equality_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression, L_PAREN, equality_expression]
+[0, 15, 6, 48, 113, 183, 233, 14, 62, 37]
+
+logical_and_expression:equality_expression
+Action r26
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression, L_PAREN, logical_and_expression]
+[0, 15, 6, 48, 113, 183, 233, 14, 62]
+
+goto(62,logical_and_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression, L_PAREN, logical_and_expression]
+[0, 15, 6, 48, 113, 183, 233, 14, 62, 46]
+
+logical_or_expression:logical_and_expression
+Action r28
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression, L_PAREN, logical_or_expression]
+[0, 15, 6, 48, 113, 183, 233, 14, 62]
+
+goto(62,logical_or_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression, L_PAREN, logical_or_expression]
+[0, 15, 6, 48, 113, 183, 233, 14, 62, 40]
+
+assignment_expression:logical_or_expression
+Action r30
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression, L_PAREN, assignment_expression]
+[0, 15, 6, 48, 113, 183, 233, 14, 62]
+
+goto(62,assignment_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression, L_PAREN, assignment_expression]
+[0, 15, 6, 48, 113, 183, 233, 14, 62, 127]
+
+argument_expression_list:assignment_expression
+Action r32
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression, L_PAREN, argument_expression_list]
+[0, 15, 6, 48, 113, 183, 233, 14, 62]
+
+goto(62,argument_expression_list)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression, L_PAREN, argument_expression_list]
+[0, 15, 6, 48, 113, 183, 233, 14, 62, 126]
+
+Action s196
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression, L_PAREN, argument_expression_list, R_PAREN]
+[0, 15, 6, 48, 113, 183, 233, 14, 62, 126, 196]
+
+postfix_expression:postfix_expression L_PAREN argument_expression_list R_PAREN
+Action r7
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression]
+[0, 15, 6, 48, 113, 183, 233]
+
+goto(233,postfix_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, postfix_expression]
+[0, 15, 6, 48, 113, 183, 233, 14]
+
+unary_expression:postfix_expression
+Action r8
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, unary_expression]
+[0, 15, 6, 48, 113, 183, 233]
+
+goto(233,unary_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, unary_expression]
+[0, 15, 6, 48, 113, 183, 233, 16]
+
+multiplicative_expression:unary_expression
+Action r11
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, multiplicative_expression]
+[0, 15, 6, 48, 113, 183, 233]
+
+goto(233,multiplicative_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, multiplicative_expression]
+[0, 15, 6, 48, 113, 183, 233, 21]
+
+additive_expression:multiplicative_expression
+Action r15
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, additive_expression]
+[0, 15, 6, 48, 113, 183, 233]
+
+goto(233,additive_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, additive_expression]
+[0, 15, 6, 48, 113, 183, 233, 20]
+
+relational_expression:additive_expression
+Action r18
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, relational_expression]
+[0, 15, 6, 48, 113, 183, 233]
+
+goto(233,relational_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, relational_expression]
+[0, 15, 6, 48, 113, 183, 233, 30]
+
+equality_expression:relational_expression
+Action r23
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, equality_expression]
+[0, 15, 6, 48, 113, 183, 233]
+
+goto(233,equality_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, equality_expression]
+[0, 15, 6, 48, 113, 183, 233, 13]
+
+logical_and_expression:equality_expression
+Action r26
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, logical_and_expression]
+[0, 15, 6, 48, 113, 183, 233]
+
+goto(233,logical_and_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, logical_and_expression]
+[0, 15, 6, 48, 113, 183, 233, 29]
+
+logical_or_expression:logical_and_expression
+Action r28
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, logical_or_expression]
+[0, 15, 6, 48, 113, 183, 233]
+
+goto(233,logical_or_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, logical_or_expression]
+[0, 15, 6, 48, 113, 183, 233, 17]
+
+assignment_expression:logical_or_expression
+Action r30
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, assignment_expression]
+[0, 15, 6, 48, 113, 183, 233]
+
+goto(233,assignment_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, assignment_expression]
+[0, 15, 6, 48, 113, 183, 233, 26]
+
+expression:assignment_expression
+Action r42
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, expression]
+[0, 15, 6, 48, 113, 183, 233]
+
+goto(233,expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, expression]
+[0, 15, 6, 48, 113, 183, 233, 311]
+
+Action s375
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, expression, SEMICOLON]
+[0, 15, 6, 48, 113, 183, 233, 311, 375]
+
+expression_statement:expression SEMICOLON
+Action r71
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, expression_statement]
+[0, 15, 6, 48, 113, 183, 233]
+
+goto(233,expression_statement)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, expression_statement]
+[0, 15, 6, 48, 113, 183, 233, 313]
+
+statement:expression_statement
+Action r58
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, statement]
+[0, 15, 6, 48, 113, 183, 233]
+
+goto(233,statement)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, statement]
+[0, 15, 6, 48, 113, 183, 233, 309]
+
+statement_list:statement
+Action r68
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, statement_list]
+[0, 15, 6, 48, 113, 183, 233]
+
+goto(233,statement_list)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, statement_list]
+[0, 15, 6, 48, 113, 183, 233, 310]
+
+Action s373
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, L_CURLY, statement_list, R_CURLY]
+[0, 15, 6, 48, 113, 183, 233, 310, 373]
+
+compound_statement:L_CURLY statement_list R_CURLY
+Action r63
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement]
+[0, 15, 6, 48, 113, 183]
+
+goto(183,compound_statement)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement]
+[0, 15, 6, 48, 113, 183, 234]
+
+Action s317
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE]
+[0, 15, 6, 48, 113, 183, 234, 317]
+
+Action s237
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY]
+[0, 15, 6, 48, 113, 183, 234, 317, 237]
+
+Action s5
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, IDENTIFIER]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 5]
+
+primary_expression:IDENTIFIER
+Action r1
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, primary_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237]
+
+goto(237,primary_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, primary_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 22]
+
+postfix_expression:primary_expression
+Action r4
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237]
+
+goto(237,postfix_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 14]
+
+Action s62
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression, L_PAREN]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 14, 62]
+
+Action s33
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression, L_PAREN, IDENTIFIER]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 14, 62, 33]
+
+primary_expression:IDENTIFIER
+Action r1
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression, L_PAREN, primary_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 14, 62]
+
+goto(62,primary_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression, L_PAREN, primary_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 14, 62, 43]
+
+postfix_expression:primary_expression
+Action r4
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression, L_PAREN, postfix_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 14, 62]
+
+goto(62,postfix_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression, L_PAREN, postfix_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 14, 62, 38]
+
+unary_expression:postfix_expression
+Action r8
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression, L_PAREN, unary_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 14, 62]
+
+goto(62,unary_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression, L_PAREN, unary_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 14, 62, 39]
+
+multiplicative_expression:unary_expression
+Action r11
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression, L_PAREN, multiplicative_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 14, 62]
+
+goto(62,multiplicative_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression, L_PAREN, multiplicative_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 14, 62, 42]
+
+additive_expression:multiplicative_expression
+Action r15
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression, L_PAREN, additive_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 14, 62]
+
+goto(62,additive_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression, L_PAREN, additive_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 14, 62, 41]
+
+relational_expression:additive_expression
+Action r18
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression, L_PAREN, relational_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 14, 62]
+
+goto(62,relational_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression, L_PAREN, relational_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 14, 62, 47]
+
+equality_expression:relational_expression
+Action r23
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression, L_PAREN, equality_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 14, 62]
+
+goto(62,equality_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression, L_PAREN, equality_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 14, 62, 37]
+
+logical_and_expression:equality_expression
+Action r26
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression, L_PAREN, logical_and_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 14, 62]
+
+goto(62,logical_and_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression, L_PAREN, logical_and_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 14, 62, 46]
+
+logical_or_expression:logical_and_expression
+Action r28
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression, L_PAREN, logical_or_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 14, 62]
+
+goto(62,logical_or_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression, L_PAREN, logical_or_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 14, 62, 40]
+
+assignment_expression:logical_or_expression
+Action r30
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression, L_PAREN, assignment_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 14, 62]
+
+goto(62,assignment_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression, L_PAREN, assignment_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 14, 62, 127]
+
+argument_expression_list:assignment_expression
+Action r32
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression, L_PAREN, argument_expression_list]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 14, 62]
+
+goto(62,argument_expression_list)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression, L_PAREN, argument_expression_list]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 14, 62, 126]
+
+Action s196
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression, L_PAREN, argument_expression_list, R_PAREN]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 14, 62, 126, 196]
+
+postfix_expression:postfix_expression L_PAREN argument_expression_list R_PAREN
+Action r7
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237]
+
+goto(237,postfix_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, postfix_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 14]
+
+unary_expression:postfix_expression
+Action r8
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, unary_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237]
+
+goto(237,unary_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, unary_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 16]
+
+multiplicative_expression:unary_expression
+Action r11
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, multiplicative_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237]
+
+goto(237,multiplicative_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, multiplicative_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 21]
+
+additive_expression:multiplicative_expression
+Action r15
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, additive_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237]
+
+goto(237,additive_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, additive_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 20]
+
+relational_expression:additive_expression
+Action r18
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, relational_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237]
+
+goto(237,relational_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, relational_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 30]
+
+equality_expression:relational_expression
+Action r23
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, equality_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237]
+
+goto(237,equality_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, equality_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 13]
+
+logical_and_expression:equality_expression
+Action r26
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, logical_and_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237]
+
+goto(237,logical_and_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, logical_and_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 29]
+
+logical_or_expression:logical_and_expression
+Action r28
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, logical_or_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237]
+
+goto(237,logical_or_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, logical_or_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 17]
+
+assignment_expression:logical_or_expression
+Action r30
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, assignment_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237]
+
+goto(237,assignment_expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, assignment_expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 26]
+
+expression:assignment_expression
+Action r42
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237]
+
+goto(237,expression)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, expression]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 311]
+
+Action s375
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, expression, SEMICOLON]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 311, 375]
+
+expression_statement:expression SEMICOLON
+Action r71
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, expression_statement]
+[0, 15, 6, 48, 113, 183, 234, 317, 237]
+
+goto(237,expression_statement)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, expression_statement]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 313]
+
+statement:expression_statement
+Action r58
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, statement]
+[0, 15, 6, 48, 113, 183, 234, 317, 237]
+
+goto(237,statement)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, statement]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 309]
+
+statement_list:statement
+Action r68
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, statement_list]
+[0, 15, 6, 48, 113, 183, 234, 317, 237]
+
+goto(237,statement_list)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, statement_list]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 321]
+
+Action s384
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, L_CURLY, statement_list, R_CURLY]
+[0, 15, 6, 48, 113, 183, 234, 317, 237, 321, 384]
+
+compound_statement:L_CURLY statement_list R_CURLY
+Action r63
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, compound_statement]
+[0, 15, 6, 48, 113, 183, 234, 317]
+
+goto(317,compound_statement)
+[#, translation_unit, IF, L_PAREN, expression, R_PAREN, compound_statement, ELSE, compound_statement]
+[0, 15, 6, 48, 113, 183, 234, 317, 380]
+
+selection_statement:IF L_PAREN expression R_PAREN compound_statement ELSE compound_statement
+Action r76
+[#, translation_unit, selection_statement]
+[0, 15]
+
+goto(15,selection_statement)
+[#, translation_unit, selection_statement]
+[0, 15, 19]
+
+external_declaration:selection_statement
+Action r90
+[#, translation_unit, external_declaration]
+[0, 15]
+
+goto(15,external_declaration)
+[#, translation_unit, external_declaration]
+[0, 15, 71]
+
+translation_unit:translation_unit external_declaration
+Action r86
+[#, translation_unit]
+[0]
+
+goto(0,translation_unit)
+[#, translation_unit]
+[0, 15]
+
+accepted
