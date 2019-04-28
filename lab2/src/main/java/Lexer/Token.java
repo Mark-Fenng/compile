@@ -1,16 +1,25 @@
 package Lexer;
 
-public class token {
+public class Token {
     private String type;
     private String originWord;
     private int tableIndex;
     private String tokenValue;
+    private int lineNumber;
 
-    public token(String type, String word, int index, String tokenValue) {
+    public Token(String type, String word, int index, String tokenValue, int lineNumber) {
         this.type = type;
         this.originWord = word;
         this.tableIndex = index;
         this.tokenValue = tokenValue;
+        this.lineNumber = lineNumber;
+    }
+
+    /**
+     * @return the lineNumber
+     */
+    public int getLineNumber() {
+        return lineNumber;
     }
 
     /**
@@ -53,6 +62,22 @@ public class token {
      */
     public void setOriginWord(String originWord) {
         this.originWord = originWord;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Token) {
+            Token objToken = (Token) obj;
+            return objToken.getOriginWord().equals(this.originWord) && objToken.getTableIndex() == this.tableIndex
+                    && objToken.getTokenValue().equals(this.tokenValue) && objToken.getType().equals(this.type);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return this.originWord;
     }
 }
 // reserved, operator, punctuation, variable, number, comment

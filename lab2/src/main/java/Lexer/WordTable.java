@@ -3,7 +3,7 @@ package Lexer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class wordTable {
+public class WordTable {
     private String type;
     private List<String> wordList = new ArrayList<>();
 

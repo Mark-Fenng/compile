@@ -4,18 +4,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class analyse {
-    private final wordTable reserved = new wordTable();
-    private final wordTable variable = new wordTable();
-    private final wordTable punctuation = new wordTable();
-    private final wordTable punctuationTokens = new wordTable();
-    private final wordTable operators = new wordTable();
-    private final wordTable operatorTokens = new wordTable();
-    private final List<token> tokenList = new ArrayList<>();
+public class Analyse {
+    private final WordTable reserved = new WordTable();
+    private final WordTable variable = new WordTable();
+    private final WordTable punctuation = new WordTable();
+    private final WordTable punctuationTokens = new WordTable();
+    private final WordTable operators = new WordTable();
+    private final WordTable operatorTokens = new WordTable();
+    private final List<Token> tokenList = new ArrayList<>();
     private final String content;
     private int index = 0;
+    private int lineNumber = 1;
 
-    public analyse(String content) {
+    public Analyse(String content) {
 
         reserved.setWordList(Arrays.asList("var", "val", "func", "if", "elif", "else", "while", "for", "return",
                 "break", "continue"));
@@ -23,9 +24,9 @@ public class analyse {
         punctuationTokens.setWordList(Arrays.asList("ASSIGN", "SEMICOLON", "COMMA", "L_PAREN", "R_PAREN", "L_BRACK",
                 "R_BRACK", "L_CURLY", "R_CURLY"));
         operators.setWordList(
-                Arrays.asList("+", "*", "/", "!=", " !", "&", "|", "==", ">=", ">", "<=", "<", "&&", "||"));
-        operatorTokens.setWordList(Arrays.asList("ADD", "MUL", "DIV", "ENQ", "NOT", "AND", "OR", "EQ", "GE", "GT", "LE",
-                "LT", "DA", "DO"));
+                Arrays.asList("+", "-", "*", "/", "!=", " !", "&", "|", "==", ">=", ">", "<=", "<", "&&", "||"));
+        operatorTokens.setWordList(Arrays.asList("ADD", "SUB", "MUL", "DIV", "NEQ", "NOT", "AND", "OR", "EQ", "GE",
+                "GT", "LE", "LT", "DA", "DO"));
         this.content = content;
 
     }
@@ -33,55 +34,62 @@ public class analyse {
     public void parse() {
         try {
             while (index < content.length()) {
-                if (Character.isDigit(getChar(index)) || getChar(index) == '-') {
-                    String digit = getDigit();
-                    tokenList.add(new token("number", digit, 0, "CONSTANT"));
+                if (getChar(index) == '\n') {
+                    index++;
+                    lineNumber++;
+                    continue;
+                }
+                if (Character.isDigit(getChar(index))) {
+                    List<Object> resultList = getDigit();
+                    String digit = (String) resultList.get(0);
+                    boolean isFloat = (boolean) resultList.get(1);
+                    tokenList.add(new Token(isFloat ? "float" : "integer", digit, 0, "CONSTANT", lineNumber));
                 } else if (Character.isLetter(getChar(index)) || getChar(index) == '_') {
                     String word = getWord();
-                    if (reserved.getWordList().contains(word)) {
-                        tokenList.add(
-                                new token("reserved", word, reserved.getWordList().indexOf(word), word.toUpperCase()));
+                    if (word.equals("true") || word.equals("false")) {
+                        tokenList.add(new Token("boolean", word, 0, "CONSTANT", lineNumber));
+                    } else if (reserved.getWordList().contains(word)) {
+                        tokenList.add(new Token("reserved", word, reserved.getWordList().indexOf(word),
+                                word.toUpperCase(), lineNumber));
                     } else {
                         int tableIndex = variable.addWord(word);
-                        tokenList.add(new token("variable", word, tableIndex, "IDENTIFIER"));
+                        tokenList.add(new Token("variable", word, tableIndex, "IDENTIFIER", lineNumber));
                     }
                 } else if (getChar(index) == '/' && index + 1 < content.length() && getChar(index + 1) == '*') {
                     String comment = getComment();
-                    tokenList.add(new token("comment", comment, 0, "COMMENT"));
+                    tokenList.add(new Token("comment", comment, 0, "COMMENT", lineNumber));
                 } else {
                     if (punctuation.getWordList().contains("" + getChar(index))) {
                         if (!(getChar(index) == '=' && index + 1 < content.length() && getChar(index + 1) == '=')) {
-                            tokenList.add(new token("punctuation", "" + getChar(index),
+                            tokenList.add(new Token("punctuation", "" + getChar(index),
                                     punctuation.getWordList().indexOf("" + getChar(index)),
                                     punctuationTokens.getWordList()
-                                            .get(punctuation.getWordList().indexOf(String.valueOf(getChar(index))))));
+                                            .get(punctuation.getWordList().indexOf(String.valueOf(getChar(index)))),
+                                    lineNumber));
                             index += 1;
                             continue;
                         }
                     }
                     String operator = getOperator();
                     if (!operator.equals("")) {
-                        tokenList.add(new token("operator", operator,
-                                operators.getWordList().indexOf(String.valueOf(operator)),
-                                operatorTokens.getWordList().get(
-                                        operators.getWordList().indexOf(String.valueOf(String.valueOf(operator))))));
+                        tokenList
+                                .add(new Token("operator", operator,
+                                        operators.getWordList().indexOf(String.valueOf(operator)),
+                                        operatorTokens.getWordList()
+                                                .get(operators.getWordList().indexOf(String.valueOf(operator))),
+                                        lineNumber));
                     }
                 }
             }
         } catch (Exception e) {
-            // System.err.println(e.getMessage());
-            e.printStackTrace();
+            Grammar.AST.addErrorMessage(e.toString());
         }
     }
 
-    String getDigit() throws Exception {
+    List<Object> getDigit() throws Exception {
         String digit = "";
-        boolean negativeFlag = getChar(index) == '-' ? true : false;
         boolean floatFlag = false;
         while (Character.isDigit(getChar(index)) || getChar(index) == '-' || getChar(index) == '.') {
-            if (getChar(index) == '-' && negativeFlag) {
-                throw new Exception("Wrong digit");
-            }
             if (getChar(index) == '.') {
                 if (floatFlag) {
                     throw new Exception("Wrong digit: " + digit + getChar(index));
@@ -92,7 +100,10 @@ public class analyse {
             digit += getChar(index);
             index += 1;
         }
-        return digit;
+        List<Object> returnList = new ArrayList<>();
+        returnList.add(digit);
+        returnList.add(floatFlag);
+        return returnList;
     }
 
     String getWord() {
@@ -106,12 +117,14 @@ public class analyse {
 
     String getComment() throws Exception {
         String comment = "";
+        index += 2;
         while (index + 1 < content.length() && !(getChar(index) == '*' || getChar(index + 1) == '/')) {
             comment += getChar(index);
             index += 1;
         }
         if (index + 1 == content.length())
             throw new Exception("Wrong comment");
+        index += 2;
         return comment;
     }
 
@@ -120,6 +133,10 @@ public class analyse {
         switch (getChar(index)) {
         case '+':
             operator += '+';
+            index += 1;
+            break;
+        case '-':
+            operator += '-';
             index += 1;
             break;
         case '*':
@@ -131,7 +148,7 @@ public class analyse {
             index += 1;
             break;
         case '!':
-            if (index + 1 < content.length() && getChar(index) == '=') {
+            if (index + 1 < content.length() && getChar(index + 1) == '=') {
                 operator += "!=";
                 index += 1;
             } else
@@ -139,7 +156,7 @@ public class analyse {
             index += 1;
             break;
         case '&':
-            if (index + 1 < content.length() && getChar(index) == '&') {
+            if (index + 1 < content.length() && getChar(index + 1) == '&') {
                 operator += "&&";
                 index += 1;
             } else {
@@ -148,7 +165,7 @@ public class analyse {
             index += 1;
             break;
         case '|':
-            if (index + 1 < content.length() && getChar(index) == '|') {
+            if (index + 1 < content.length() && getChar(index + 1) == '|') {
                 operator += "||";
                 index += 1;
             } else {
@@ -157,14 +174,14 @@ public class analyse {
             index += 1;
             break;
         case '=':
-            if (index + 1 < content.length() && getChar(index) == '=') {
+            if (index + 1 < content.length() && getChar(index + 1) == '=') {
                 operator += "==";
                 index += 1;
             }
             index += 1;
             break;
         case '>':
-            if (index + 1 < content.length() && getChar(index) == '=') {
+            if (index + 1 < content.length() && getChar(index + 1) == '=') {
                 operator += ">=";
                 index += 1;
             } else {
@@ -173,7 +190,7 @@ public class analyse {
             index += 1;
             break;
         case '<':
-            if (index + 1 < content.length() && getChar(index) == '=') {
+            if (index + 1 < content.length() && getChar(index + 1) == '=') {
                 operator += "<=";
                 index += 1;
             } else {
@@ -196,14 +213,14 @@ public class analyse {
     /**
      * @return the tokenList
      */
-    public List<token> getTokenList() {
+    public List<Token> getTokenList() {
         return tokenList;
     }
 
     /**
      * @return the variable
      */
-    public wordTable getVariable() {
+    public WordTable getVariable() {
         return variable;
     }
 }

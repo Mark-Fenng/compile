@@ -912,7 +912,8 @@ public class AST {
                 }
             } else {
                 Semantics.addErrorMessage("Error at Line: " + analyse.getTokenList().get(top).getLineNumber()
-                        + " [Semantics analyse error]");
+                        + " [Semantics analyse error near word: " + analyse.getTokenList().get(top).getOriginWord()
+                        + "]");
                 return;
             }
         }

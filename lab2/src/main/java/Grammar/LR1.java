@@ -1,3 +1,5 @@
+package Grammar;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -14,7 +16,7 @@ public class LR1 {
     public static String endString = "#"; // define the end symbol as variable endString
     public static String separatorString = "->"; // define formula separator symbol as variable separatorString
 
-    LR1(String grammarInputFile) throws Exception {
+    public LR1(String grammarInputFile) throws Exception {
         readGrammar(grammarInputFile);
         for (String term : non_terminators) {
             firstSets.put(term, getFirstSet(term));
@@ -31,9 +33,9 @@ public class LR1 {
         actionTable.add(new HashMap<>());
 
         getItemSets();
-        System.out.println(gotoTable);
-        System.out.println();
-        System.out.println(actionTable);
+        // System.out.println(gotoTable);
+        // System.out.println();
+        // System.out.println(actionTable);
     }
 
     public static void printItemSet() {
